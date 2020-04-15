@@ -45,34 +45,4 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
             menuItem.onNavDestinationSelected(navController)
         }
     }
-
-    /*private fun setupToolbar() {
-
-        val topLevelDestinations = setOf(
-            R.id.dashboardFragment,
-            R.id.favoritesFragment,
-            R.id.settingsFragment
-        )
-        val appBarConfigruation = AppBarConfiguration(topLevelDestinations)
-        binding.toolbar.setupWithNavController(navController, appBarConfigruation)
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            menuItem.onNavDestinationSelected(navController)
-        }
-    }*/
-
-
-    /*private fun setOnDestinationChangedListener() {
-        *//*navController.addOnDestinationChangedListener { _, destination, _ ->
-            when(destination.id) {
-                R.id.dashboardFragment -> binding.toolbar.swapMenu(R.menu.menu_toolbar_dashboard)
-                else -> {
-                    binding.toolbar.menu.clearMenu()
-                }
-            }
-        }*//*
-    }*/
-
-
-
-
 }

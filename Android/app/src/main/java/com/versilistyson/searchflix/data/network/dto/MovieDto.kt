@@ -1,8 +1,8 @@
 package com.versilistyson.searchflix.data.network.dto
 
 import com.squareup.moshi.Json
-import com.versilistyson.searchflix.domain.entities.Movie
 import com.versilistyson.searchflix.domain.common.Mappable
+import com.versilistyson.searchflix.domain.entities.Media.Movie
 
 data class MovieDto(
     @Json(name = "id")
@@ -23,7 +23,7 @@ data class MovieDto(
     override val entityMapper: Mappable<Movie>
         get() = object : Mappable<Movie> {
             override fun map(): Movie =
-                Movie(
+            Movie(
                     title,
                     releaseDate,
                     overview,

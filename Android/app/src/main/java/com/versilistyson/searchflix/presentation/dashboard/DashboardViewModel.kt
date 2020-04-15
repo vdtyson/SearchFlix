@@ -3,7 +3,7 @@ package com.versilistyson.searchflix.presentation.dashboard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.versilistyson.searchflix.domain.entities.Movie
+import com.versilistyson.searchflix.domain.entities.Media.Movie
 import com.versilistyson.searchflix.domain.usecase.movies.GetPopularMoviesUseCase
 import com.versilistyson.searchflix.presentation.common.UIState
 import javax.inject.Inject

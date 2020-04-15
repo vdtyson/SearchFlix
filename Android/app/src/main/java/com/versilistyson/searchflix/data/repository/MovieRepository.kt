@@ -8,7 +8,7 @@ import com.versilistyson.searchflix.data.network.dto.MovieDto
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.data.util.NetworkResult
-import com.versilistyson.searchflix.domain.entities.Movie
+import com.versilistyson.searchflix.domain.entities.Media.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow

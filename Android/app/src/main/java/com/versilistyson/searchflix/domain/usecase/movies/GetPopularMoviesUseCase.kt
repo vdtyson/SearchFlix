@@ -2,7 +2,7 @@ package com.versilistyson.searchflix.domain.usecase.movies
 
 import com.versilistyson.searchflix.data.repository.MovieRepository
 import com.versilistyson.searchflix.domain.common.Either
-import com.versilistyson.searchflix.domain.entities.Movie
+import com.versilistyson.searchflix.domain.entities.Media.Movie
 import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.domain.usecase.UseCase
 import javax.inject.Inject

@@ -4,6 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'kotlin-kapt'
 
+def apiKeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apiKeyPropertiesFile))
 
 android {
     compileSdkVersion 29
@@ -20,6 +23,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String","TMDB_KEY", apikeyProperties['TMDB_KEY'])
     }
 
     buildTypes {
