@@ -1,3 +1,4 @@
 package com.versilistyson.searchflix.data.datasource.search
 
-class MovieSearchRemoteSource
+class TVRemoteSource {
+}

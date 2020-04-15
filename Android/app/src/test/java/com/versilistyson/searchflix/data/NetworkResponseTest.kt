@@ -1,7 +1,9 @@
 package com.versilistyson.searchflix.data
 
-import com.versilistyson.searchflix.domain.*
-import okhttp3.ResponseBody
+import com.versilistyson.searchflix.data.util.NetworkResponse
+import com.versilistyson.searchflix.data.util.NetworkResult
+import com.versilistyson.searchflix.data.util.getResult
+import com.versilistyson.searchflix.domain.common.Either
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import retrofit2.Response
@@ -11,7 +13,7 @@ class NetworkResponseTest {
     fun `getResult() should return Success with Empty Data`() {
         // GIVEN
         val response = Response.success<String>(null)
-        val expected = Either.Right(NetworkSuccess.Empty<String>())
+        val expected = Either.Right(NetworkResult.Empty<String>())
         // WHEN
         val actual = NetworkResponse.getResult(response)
         // THEN
@@ -21,9 +23,9 @@ class NetworkResponseTest {
                 is Either.Right -> {
                     when(actual.right) {
 
-                        is NetworkSuccess.Data -> false
+                        is NetworkResult.Data -> false
 
-                        is NetworkSuccess.Empty -> true
+                        is NetworkResult.Empty -> true
                     }
                 }
 
@@ -37,7 +39,7 @@ class NetworkResponseTest {
         // GIVEN
         val data = "Success"
         val response = Response.success<String>(data)
-        val expected = Either.Right(NetworkSuccess.Data(data))
+        val expected = Either.Right(NetworkResult.Data(data))
         //WHEN
         val actual = NetworkResponse.getResult(response)
         // THEN
@@ -59,7 +61,7 @@ class NetworkResponseTest {
         // GIVEN
         val data = "Success"
         val response = Response.success(data)
-        val expected = Either.Right(NetworkSuccess.Data(data))
+        val expected = Either.Right(NetworkResult.Data(data))
         // WHEN
         val actual = response.getResult()
         // THEN

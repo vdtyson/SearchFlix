@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.data.inteceptors
+package com.versilistyson.searchflix.data.network.inteceptors
 
 import com.versilistyson.searchflix.R
 import okhttp3.Interceptor
