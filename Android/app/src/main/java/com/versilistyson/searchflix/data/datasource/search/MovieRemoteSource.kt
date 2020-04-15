@@ -16,7 +16,12 @@ class MovieRemoteSource
         language: String,
         isAdultIncluded: Boolean
     ): Either<Failure.ServerError, NetworkResult<List<MovieDto>>> {
-        val response = movieApi.queryMovies(query, isAdultIncluded, page, language)
+        val response = movieApi.fetchMoviesFromQuery(query, isAdultIncluded, page, language)
+        return response.getResult()
+    }
+
+    suspend fun fetchPopularMovies(language: String, page: Int): Either<Failure.ServerError, NetworkResult<List<MovieDto>>> {
+        val response = movieApi.fetchPopularMovies(language,page)
         return response.getResult()
     }
 }

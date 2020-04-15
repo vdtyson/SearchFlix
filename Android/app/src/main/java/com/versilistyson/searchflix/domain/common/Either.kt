@@ -55,7 +55,19 @@ sealed class Either<out L, out R> {
             is Right -> fnR(right)
         }
 
+    fun <T> foldAndGet(fnL: (L) -> T, fnR: (R) -> T): T =
+        when(this) {
+            is Left -> fnL(left)
+            is Right -> fnR(right)
+        }
+
     suspend fun sFold(fnL: suspend (L) -> Any, fnR: suspend (R) -> Any): Any =
+        when(this) {
+            is Left -> fnL(left)
+            is Right -> fnR(right)
+        }
+
+    suspend fun <T> sFoldAndGet(fnL: suspend (L) -> T, fnR: suspend (R) -> T): T =
         when(this) {
             is Left -> fnL(left)
             is Right -> fnR(right)

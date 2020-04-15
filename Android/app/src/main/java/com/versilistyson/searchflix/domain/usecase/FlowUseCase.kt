@@ -6,6 +6,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlin.coroutines.CoroutineContext
 
 abstract class FlowUseCase<out Type, in Params> {
 
@@ -14,6 +15,6 @@ abstract class FlowUseCase<out Type, in Params> {
     @ExperimentalCoroutinesApi
     suspend fun invoke(
         params: Params,
-        dispatcher: CoroutineDispatcher
-    ) : Flow<Either<Failure, Type>> = run(params).flowOn(dispatcher)
+        coroutineContext: CoroutineContext
+    ) : Flow<Either<Failure, Type>> = run(params).flowOn(coroutineContext)
 }

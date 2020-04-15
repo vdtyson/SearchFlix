@@ -18,27 +18,32 @@ class MovieRepository
 @Inject constructor(val movieRemoteSource: MovieRemoteSource) {
     suspend fun searchMovies(
         query: String,
-        page: LiveData<Int>,
+        page: Int = 1,
         language: String = "en-US",
         isAdultIncluded: Boolean = false
-    ): Flow<Either<Failure, List<Movie>>> =
-        flow {
-            page.asFlow().collect { pageNum ->
-                when(val networkResponse = movieRemoteSource.searchMovies(query,pageNum,language,isAdultIncluded)) {
-                    is Either.Left -> emit(Either.Left(networkResponse.left))
-                    is Either.Right -> {
-                        when(val networkResult = networkResponse.right) {
-                            is NetworkResult.Empty -> Either.Right(emptyList<Movie>())
-                            is NetworkResult.Data -> {
-                                val movies = mutableListOf<Movie>()
-                                networkResult.value.forEach { movies.add(it.mapToEntity()) }
-                                Either.Right(movies)
-                            }
-                        }
-                    }
+    ) : Either<Failure, List<Movie>> {
+        val response = movieRemoteSource.searchMovies(query, page, language, isAdultIncluded)
+        return response.foldAndGet(::handleFailure,::handleNetworkResult)
+    }
+
+    suspend fun getPopularMovies(language: String, page: Int): Either<Failure, List<Movie>> {
+        val response = movieRemoteSource.fetchPopularMovies(language,page)
+        return response.foldAndGet(::handleFailure, ::handleNetworkResult)
+    }
+
+    private fun handleNetworkResult(networkResult: NetworkResult<List<MovieDto>>) : Either<Failure, List<Movie>> =
+        when(networkResult) {
+            is NetworkResult.Empty -> Either.Right(emptyList())
+            is NetworkResult.Data -> {
+                val movies = mutableListOf<Movie>()
+                networkResult.value.forEach {
+                    movies.add(it.mapToEntity())
                 }
+                Either.Right(movies)
             }
         }
 
-
+    // TODO: Maybe add some feature failures
+    private fun handleFailure(failure: Failure) : Either<Failure, List<Movie>> =
+        Either.Left(failure)
 }

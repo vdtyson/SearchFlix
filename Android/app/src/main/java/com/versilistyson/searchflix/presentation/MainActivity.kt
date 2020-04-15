@@ -14,6 +14,8 @@ import com.versilistyson.searchflix.databinding.ActivityMainBinding
 import com.versilistyson.searchflix.di.util.injector
 import com.versilistyson.searchflix.presentation.common.activity.BaseActivity
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.util.clearMenu
+import com.versilistyson.searchflix.presentation.util.swapMenu
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
@@ -35,11 +37,16 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
     private fun setupNavigation() {
         navController = binding.navHostFragmentContainer.findNavController()
         navController.setGraph(R.navigation.nav_graph_main)
-        setupToolbar()
         setupBottomNavBar()
     }
+    private fun setupBottomNavBar() {
+        binding.bottomNav.setupWithNavController(navController)
+        binding.bottomNav.setOnNavigationItemSelectedListener { menuItem ->
+            menuItem.onNavDestinationSelected(navController)
+        }
+    }
 
-    private fun setupToolbar() {
+    /*private fun setupToolbar() {
 
         val topLevelDestinations = setOf(
             R.id.dashboardFragment,
@@ -51,13 +58,19 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             menuItem.onNavDestinationSelected(navController)
         }
-    }
-    private fun setupBottomNavBar() {
-        binding.bottomNav.setupWithNavController(navController)
-        binding.bottomNav.setOnNavigationItemSelectedListener { menuItem ->
-            menuItem.onNavDestinationSelected(navController)
-        }
-    }
+    }*/
+
+
+    /*private fun setOnDestinationChangedListener() {
+        *//*navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.dashboardFragment -> binding.toolbar.swapMenu(R.menu.menu_toolbar_dashboard)
+                else -> {
+                    binding.toolbar.menu.clearMenu()
+                }
+            }
+        }*//*
+    }*/
 
 
 
