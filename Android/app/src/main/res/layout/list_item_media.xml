@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_marginHorizontal="8dp"
+        android:id="@+id/cardView_movie"
+        android:layout_width="130dp"
+        android:layout_height="200dp">
+        <LinearLayout
+            android:weightSum="10"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imageViewMediaPoster"
+                android:scaleType="fitXY"
+                android:src="@drawable/pulp_fiction_poster2"
+                android:layout_weight="8"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+            <TextView
+                android:textSize="18sp"
+                android:id="@+id/textViewMediaTitle"
+                android:gravity="center"
+                android:text="@string/sample_movie_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"/>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

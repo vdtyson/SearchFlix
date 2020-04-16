@@ -1,6 +1,6 @@
 package com.versilistyson.searchflix.di.module
 
-import com.versilistyson.searchflix.data.inteceptors.AuthorizationInterceptor
+import com.versilistyson.searchflix.data.network.inteceptors.AuthorizationInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -16,7 +16,7 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    private fun provideOkHttpClient(): OkHttpClient =
+    fun provideOkHttpClient(): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(AuthorizationInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -26,20 +26,20 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    private fun provideMoshiConverterFactory() =
+    fun provideMoshiConverterFactory(): MoshiConverterFactory =
         MoshiConverterFactory.create()
 
     @JvmStatic
     @Singleton @Provides
-    private fun provideRetrofit(
+    fun provideRetrofit(
         okHttpClient: OkHttpClient,
         moshiConverterFactory: MoshiConverterFactory
-    ) {
+    ) : Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(moshiConverterFactory)
             .baseUrl(BASE_URL)
             .build()
-    }
+
 
 }

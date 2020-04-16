@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.domain
+package com.versilistyson.searchflix.domain.exception
 
 import java.lang.Exception
 

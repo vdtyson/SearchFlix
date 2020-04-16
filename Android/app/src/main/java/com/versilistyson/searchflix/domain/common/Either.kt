@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.domain
+package com.versilistyson.searchflix.domain.common
 
 // https://github.com/android10/Android-CleanArchitectureKotlin/blob/master/app/src/main/kotlin/com/fernandocejas/sample/core/functional/Either.kt
 /**
@@ -55,6 +55,25 @@ sealed class Either<out L, out R> {
             is Right -> fnR(right)
         }
 
+    fun <T> foldAndGet(fnL: (L) -> T, fnR: (R) -> T): T =
+        when(this) {
+            is Left -> fnL(left)
+            is Right -> fnR(right)
+        }
+
+    suspend fun sFold(fnL: suspend (L) -> Any, fnR: suspend (R) -> Any): Any =
+        when(this) {
+            is Left -> fnL(left)
+            is Right -> fnR(right)
+        }
+
+    suspend fun <T> sFoldAndGet(fnL: suspend (L) -> T, fnR: suspend (R) -> T): T =
+        when(this) {
+            is Left -> fnL(left)
+            is Right -> fnR(right)
+        }
+
+
     /**
      * Composes 2 functions
      * See <a href="https://proandroiddev.com/kotlins-nothing-type-946de7d464fb">Credits to Alex Hart.</a>
@@ -69,8 +88,10 @@ sealed class Either<out L, out R> {
      */
     fun <T, L, R> Either<L, R>.flatMap(fn: (R) -> Either<L, T>): Either<L, T> =
         when (this) {
-            is Either.Left -> Either.Left(left)
-            is Either.Right -> fn(right)
+            is Left -> Left(
+                left
+            )
+            is Right -> fn(right)
         }
 
     /**
@@ -84,7 +105,7 @@ sealed class Either<out L, out R> {
      */
     fun <L, R> Either<L, R>.getOrElse(value: R): R =
         when (this) {
-            is Either.Left -> value
-            is Either.Right -> right
+            is Left -> value
+            is Right -> right
         }
 }

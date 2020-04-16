@@ -14,6 +14,8 @@ import com.versilistyson.searchflix.databinding.ActivityMainBinding
 import com.versilistyson.searchflix.di.util.injector
 import com.versilistyson.searchflix.presentation.common.activity.BaseActivity
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.util.clearMenu
+import com.versilistyson.searchflix.presentation.util.swapMenu
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
@@ -35,22 +37,7 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
     private fun setupNavigation() {
         navController = binding.navHostFragmentContainer.findNavController()
         navController.setGraph(R.navigation.nav_graph_main)
-        setupToolbar()
         setupBottomNavBar()
-    }
-
-    private fun setupToolbar() {
-
-        val topLevelDestinations = setOf(
-            R.id.dashboardFragment,
-            R.id.favoritesFragment,
-            R.id.settingsFragment
-        )
-        val appBarConfigruation = AppBarConfiguration(topLevelDestinations)
-        binding.toolbar.setupWithNavController(navController, appBarConfigruation)
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            menuItem.onNavDestinationSelected(navController)
-        }
     }
     private fun setupBottomNavBar() {
         binding.bottomNav.setupWithNavController(navController)
@@ -58,8 +45,4 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
             menuItem.onNavDestinationSelected(navController)
         }
     }
-
-
-
-
 }
