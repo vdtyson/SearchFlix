@@ -11,11 +11,6 @@ import com.versilistyson.searchflix.domain.entities.Category
 
 class CategoryAdapter(private val categories: MutableList<Category>, private val mediaLayoutManager: LinearLayoutManager): RecyclerView.Adapter<CategoryAdapter.CategoryHolder>() {
 
-    enum class State {
-        LOADING,
-        NORMAL
-    }
-
     inner class CategoryHolder(view: View): RecyclerView.ViewHolder(view) {
         private var textViewCategoryTitle = view.findViewById<TextView>(R.id.textViewMediaTitle)
         private var recyclerViewMedia: RecyclerView = view.findViewById(R.id.recyclerViewMedia)
@@ -24,13 +19,14 @@ class CategoryAdapter(private val categories: MutableList<Category>, private val
             recyclerViewMedia.addOnScrollListener(
                 object: PaginationListener(mediaLayoutManager) {
                     override fun loadMoreItems() {
-                        TODO("Not yet implemented")
+                        val adapter = recyclerViewMedia.adapter as MediaPagedAdapter
+                        adapter.setLoadingState()
                     }
 
                     override fun isLastPage(): Boolean = false
 
                     override fun isLoading(): Boolean {
-                        val adapter = recyclerViewMedia.adapter as MediaAdapter
+                        val adapter = recyclerViewMedia.adapter as MediaPagedAdapter
                         return adapter.isLoading()
                     }
 
@@ -42,7 +38,7 @@ class CategoryAdapter(private val categories: MutableList<Category>, private val
             textViewCategoryTitle.text = categories[position].title
         }
         fun bindMediaAdapter(position: Int) {
-            recyclerViewMedia.adapter = MediaAdapter(categories[position].mediaList.toMutableList())
+            recyclerViewMedia.adapter = MediaPagedAdapter(categories[position].mediaList.toMutableList())
         }
     }
     override fun onCreateViewHolder(

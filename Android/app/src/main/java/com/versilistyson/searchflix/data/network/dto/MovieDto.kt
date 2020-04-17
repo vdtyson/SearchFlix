@@ -23,13 +23,14 @@ data class MovieDto(
     override val entityMapper: Mappable<Movie>
         get() = object : Mappable<Movie> {
             override fun map(): Movie =
-            Movie(
-                    title,
-                    releaseDate,
-                    overview,
-                    posterPath,
-                    popularity,
-                    voteAverage
+                Movie(
+                    movieId = id,
+                    title = title,
+                    releaseDate = releaseDate,
+                    overview = overview,
+                    posterPath = posterPath,
+                    popularity = popularity,
+                    voteAverage = voteAverage
                 )
         }
 }
