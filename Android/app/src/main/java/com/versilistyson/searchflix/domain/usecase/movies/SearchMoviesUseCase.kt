@@ -2,10 +2,9 @@ package com.versilistyson.searchflix.domain.usecase.movies
 
 import com.versilistyson.searchflix.data.repository.MovieRepository
 import com.versilistyson.searchflix.domain.common.Either
-import com.versilistyson.searchflix.domain.entities.Media.Movie
+import com.versilistyson.searchflix.domain.entities.`Dto<?>`.Movie
 import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.domain.usecase.UseCase
-import javax.inject.Inject
 
 class SearchMoviesUseCase(private val movieRepository: MovieRepository) : UseCase<List<Movie>, SearchMoviesUseCase.Params>() {
     data class Params(
@@ -16,5 +15,5 @@ class SearchMoviesUseCase(private val movieRepository: MovieRepository) : UseCas
     )
 
     override suspend fun run(params: Params): Either<Failure, List<Movie>> =
-        movieRepository.searchMovies(params.query,params.page,params.language,params.isAdultIncluded)
+        movieRepository.queryMovies(params.query,params.page,params.language,params.isAdultIncluded)
 }

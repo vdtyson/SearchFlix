@@ -6,7 +6,7 @@ import com.versilistyson.searchflix.domain.exception.Failure
 import retrofit2.Response
 
 object NetworkResponse {
-    fun <T> getResult(response: Response<T>): Either<Failure.ServerError, NetworkResult<T>> {
+    fun <T> getResult(response: Response<T>): Either<Failure, NetworkResult<T>> {
         return when {
 
             response.isSuccessful -> {

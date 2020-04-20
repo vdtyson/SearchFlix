@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
-import com.versilistyson.searchflix.domain.entities.Media
+import com.versilistyson.searchflix.domain.entities.`Dto<?>`
 
 
 sealed class MediaAdapterState {
@@ -18,7 +18,7 @@ sealed class MediaAdapterState {
     object Loading: MediaAdapterState()
 }
 
-class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener): PagedListAdapter<Media,MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
+class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener): PagedListAdapter<`Dto<?>`,MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
 
     inner class MediaViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private var mediaTitle = view.findViewById<TextView>(R.id.textViewMediaTitle)
@@ -26,7 +26,7 @@ class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener):
         init {
             view.setOnClickListener(onMediaClickListener)
         }
-        fun bindTo(mediaItem: Media?) {
+        fun bindTo(mediaItem: `Dto<?>`?) {
             mediaItem?.let {
                 Picasso.get().load(mediaItem.imagePath).into(mediaPoster)
                 mediaTitle.text = mediaItem.name
@@ -48,12 +48,12 @@ class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener):
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Media>() {
-            override fun areItemsTheSame(oldItem: Media, newItem: Media): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<`Dto<?>`>() {
+            override fun areItemsTheSame(oldItem: `Dto<?>`, newItem: `Dto<?>`): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Media, newItem: Media): Boolean {
+            override fun areContentsTheSame(oldItem: `Dto<?>`, newItem: `Dto<?>`): Boolean {
                 return oldItem == newItem
             }
 
