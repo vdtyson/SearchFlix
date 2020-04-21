@@ -9,8 +9,8 @@ sealed class Media(val id: Int, val name: String = "", val summary: String = "",
         val releaseDate: String = "",
         val overview: String = "",
         val posterPath: String = "",
-        val popularity: Int = 50,
-        val voteAverage: Int = 5
+        val popularity: Float = 50f,
+        val voteAverage: Float = 5f
     ) : Media(movieId, title,overview, posterPath)
 
     data class Show(

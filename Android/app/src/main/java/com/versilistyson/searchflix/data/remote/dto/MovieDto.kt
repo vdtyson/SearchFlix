@@ -16,9 +16,9 @@ data class MovieDto(
     @Json(name = "poster_path")
     val posterPath: String,
     @Json(name = "popularity")
-    val popularity: Int,
+    val popularity: Float,
     @Json(name = "vote_average")
-    val voteAverage: Int
+    val voteAverage: Float
 ) : Dto<Movie>() {
     override val entityMapper: Mappable<Movie>
         get() = object : Mappable<Movie> {

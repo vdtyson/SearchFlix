@@ -3,6 +3,7 @@ package com.versilistyson.searchflix.di.module
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.versilistyson.searchflix.data.remote.api.MovieApi
+import com.versilistyson.searchflix.data.remote.dto.adapter.MovieAdapter
 import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
 import dagger.Module
 import dagger.Provides
@@ -31,6 +32,7 @@ object NetworkingModule {
     @Singleton @Provides
     fun provideMoshi(): Moshi =
         Moshi.Builder()
+            .add(MovieAdapter)
             .add(KotlinJsonAdapterFactory())
             .build()
 
