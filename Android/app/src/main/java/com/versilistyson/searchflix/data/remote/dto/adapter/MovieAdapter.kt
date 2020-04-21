@@ -13,27 +13,33 @@ object MovieAdapter {
 
         reader.beginObject()
         while (reader.hasNext()) {
-            val name = reader.nextName()
-            if(name == "results") {
-                reader.beginArray()
-                while (reader.hasNext()) {
-                    val movieDto = delegate.fromJson(reader)
-                    movieDto?.let {
-                        when(movieList) {
-                            null -> {
-                                movieList = mutableListOf()
-                                movieList!!.add(it)
-                            }
-                            else -> {
-                                movieList!!.add(it)
+
+            when (reader.nextName()) {
+
+                "results" -> {
+
+                    reader.beginArray()
+                    while (reader.hasNext()) {
+                        val movieDto = delegate.fromJson(reader)
+                        movieDto?.let {
+                            when (movieList) {
+                                null -> {
+                                    movieList = mutableListOf()
+                                    movieList!!.add(it)
+                                }
+                                else -> {
+                                    movieList!!.add(it)
+                                }
                             }
                         }
-                    }
 
+                    }
+                    reader.endArray()
                 }
-                reader.endArray()
-            } else {
-                reader.skipValue()
+
+                else -> {
+                    reader.skipValue()
+                }
             }
         }
         reader.endObject()

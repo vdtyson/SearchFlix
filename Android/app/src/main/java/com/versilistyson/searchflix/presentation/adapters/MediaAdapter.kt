@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
+import com.versilistyson.searchflix.data.Constants
 import com.versilistyson.searchflix.domain.entities.Media
 import kotlinx.android.synthetic.main.list_item_media.view.*
 
@@ -28,7 +29,7 @@ class MediaAdapter<T : Media>(
 
         fun bind(position: Int) {
             val media = mediaList[position]
-            Picasso.get().load(media.imagePath).into(poster)
+            Picasso.get().load(Constants.TMDB_IMAGE_BASE_URL + media.imagePath).into(poster)
             title.text = media.name
         }
     }

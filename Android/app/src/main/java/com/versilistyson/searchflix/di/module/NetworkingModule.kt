@@ -8,6 +8,7 @@ import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterce
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -18,10 +19,16 @@ object NetworkingModule {
 
     private const val BASE_URL = "https://api.themoviedb.org/3/"
 
+    @JvmStatic @Singleton
+    @Provides
+    fun provideHttpLoggingInteceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply { this.level = HttpLoggingInterceptor.Level.BODY }
+
     @JvmStatic
     @Singleton @Provides
-    fun provideOkHttpClient(): OkHttpClient =
+    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(AuthorizationInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
