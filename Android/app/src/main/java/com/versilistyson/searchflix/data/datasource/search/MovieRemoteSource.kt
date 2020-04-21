@@ -1,7 +1,7 @@
 package com.versilistyson.searchflix.data.datasource.search
 
-import com.versilistyson.searchflix.data.network.api.MovieApi
-import com.versilistyson.searchflix.data.network.dto.MovieDto
+import com.versilistyson.searchflix.data.remote.api.MovieApi
+import com.versilistyson.searchflix.data.remote.dto.MovieDto
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.data.util.NetworkResult

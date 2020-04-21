@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.domain.entities.Category
 
+/*
 class CategoryAdapter(private val categories: MutableList<Category>, private val mediaLayoutManager: LinearLayoutManager): RecyclerView.Adapter<CategoryAdapter.CategoryHolder>() {
 
     inner class CategoryHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -55,4 +56,4 @@ class CategoryAdapter(private val categories: MutableList<Category>, private val
         holder.bindCategoryTitle(position)
         holder.bindMediaAdapter(position)
     }
-}
+}*/

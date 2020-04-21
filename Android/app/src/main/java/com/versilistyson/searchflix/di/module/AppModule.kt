@@ -9,7 +9,9 @@ import javax.inject.Singleton
 
 @Module
 object AppModule {
+
     private const val SEARCH_FLIX_PREFS = "SEARCH_FLIX_PREFS"
+
     @Singleton
     @Provides @JvmStatic
     fun provideApplicationContext(application: Application): Context =

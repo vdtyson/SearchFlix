@@ -1,6 +1,9 @@
 package com.versilistyson.searchflix.di.module
 
-import com.versilistyson.searchflix.data.network.inteceptors.AuthorizationInterceptor
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.versilistyson.searchflix.data.remote.api.MovieApi
+import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -12,7 +15,7 @@ import javax.inject.Singleton
 @Module
 object NetworkingModule {
 
-    private val BASE_URL = "https://api.themoviedb.org/3"
+    private const val BASE_URL = "https://api.themoviedb.org/3/"
 
     @JvmStatic
     @Singleton @Provides
@@ -26,8 +29,15 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    fun provideMoshiConverterFactory(): MoshiConverterFactory =
-        MoshiConverterFactory.create()
+    fun provideMoshi(): Moshi =
+        Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
+    @JvmStatic
+    @Singleton @Provides
+    fun provideMoshiConverterFactory(moshi: Moshi): MoshiConverterFactory =
+        MoshiConverterFactory.create(moshi)
 
     @JvmStatic
     @Singleton @Provides
@@ -40,6 +50,4 @@ object NetworkingModule {
             .addConverterFactory(moshiConverterFactory)
             .baseUrl(BASE_URL)
             .build()
-
-
 }

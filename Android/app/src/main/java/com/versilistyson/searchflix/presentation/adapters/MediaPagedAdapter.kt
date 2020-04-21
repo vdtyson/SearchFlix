@@ -10,23 +10,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
-import com.versilistyson.searchflix.domain.entities.`Dto<?>`
+import com.versilistyson.searchflix.domain.entities.Media
 
-
-sealed class MediaAdapterState {
-    object Normal : MediaAdapterState()
-    object Loading: MediaAdapterState()
-}
-
-class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener): PagedListAdapter<`Dto<?>`,MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
+class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener?): PagedListAdapter<Media.Movie,MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
 
     inner class MediaViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private var mediaTitle = view.findViewById<TextView>(R.id.textViewMediaTitle)
         private var mediaPoster = view.findViewById<ImageView>(R.id.imageViewMediaPoster)
         init {
-            view.setOnClickListener(onMediaClickListener)
+            onMediaClickListener?.let { listener ->
+                view.setOnClickListener { listener }
+            }
         }
-        fun bindTo(mediaItem: `Dto<?>`?) {
+
+        fun bindTo(mediaItem: Media.Movie?) {
             mediaItem?.let {
                 Picasso.get().load(mediaItem.imagePath).into(mediaPoster)
                 mediaTitle.text = mediaItem.name
@@ -48,12 +45,12 @@ class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener):
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<`Dto<?>`>() {
-            override fun areItemsTheSame(oldItem: `Dto<?>`, newItem: `Dto<?>`): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Media.Movie>() {
+            override fun areItemsTheSame(oldItem: Media.Movie, newItem: Media.Movie): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: `Dto<?>`, newItem: `Dto<?>`): Boolean {
+            override fun areContentsTheSame(oldItem: Media.Movie, newItem: Media.Movie): Boolean {
                 return oldItem == newItem
             }
 

@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.data.network.inteceptors
+package com.versilistyson.searchflix.data.remote.inteceptors
 
 import android.content.Context
 import com.versilistyson.searchflix.data.util.isNetworkAvailable

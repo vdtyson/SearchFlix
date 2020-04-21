@@ -1,8 +1,8 @@
-package com.versilistyson.searchflix.data.network.dto
+package com.versilistyson.searchflix.data.remote.dto
 
 import com.squareup.moshi.Json
 import com.versilistyson.searchflix.domain.common.Mappable
-import com.versilistyson.searchflix.domain.entities.`Dto<?>`.Movie
+import com.versilistyson.searchflix.domain.entities.Media.Movie
 
 data class MovieDto(
     @Json(name = "id")

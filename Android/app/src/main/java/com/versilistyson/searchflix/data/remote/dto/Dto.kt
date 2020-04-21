@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.data.network.dto
+package com.versilistyson.searchflix.data.remote.dto
 
 import com.versilistyson.searchflix.domain.entities.Entity
 import com.versilistyson.searchflix.domain.common.Mappable

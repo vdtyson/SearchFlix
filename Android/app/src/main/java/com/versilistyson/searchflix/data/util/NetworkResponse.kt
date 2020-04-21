@@ -1,6 +1,5 @@
 package com.versilistyson.searchflix.data.util
 
-import com.versilistyson.searchflix.data.network.dto.Dto
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
 import retrofit2.Response
