@@ -5,6 +5,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.versilistyson.searchflix.data.remote.api.MovieApi
 import com.versilistyson.searchflix.data.remote.dto.adapter.MovieAdapter
 import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
+import com.versilistyson.searchflix.data.util.NetworkConstants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -17,7 +18,6 @@ import javax.inject.Singleton
 @Module
 object NetworkingModule {
 
-    private const val BASE_URL = "https://api.themoviedb.org/3/"
 
     @JvmStatic @Singleton
     @Provides
@@ -39,7 +39,6 @@ object NetworkingModule {
     @Singleton @Provides
     fun provideMoshi(): Moshi =
         Moshi.Builder()
-            .add(MovieAdapter)
             .add(KotlinJsonAdapterFactory())
             .build()
 
@@ -57,6 +56,6 @@ object NetworkingModule {
         Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(moshiConverterFactory)
-            .baseUrl(BASE_URL)
+            .baseUrl(NetworkConstants.TMDB_V3_BASE_URL)
             .build()
 }

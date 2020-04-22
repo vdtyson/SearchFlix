@@ -23,11 +23,25 @@ sealed class Media(val id: Int, val name: String = "", val summary: String = "",
     ) : Media(showId,title, overview, posterPath)
 }
 
+sealed class MediaPagedResponse(
+    val page: Int,
+    val totalNumOfResults: Int,
+    val totalNumOfPages: Int,
+    val results: List<Media>
+) : Entity() {
+   data class MoviePagedResponse(
+       val currentPage: Int = 0,
+       val totalResults: Int = 0,
+       val totalPages: Int = 0,
+       val movieResults: List<Media.Movie> = emptyList()
+   ) : MediaPagedResponse(currentPage,totalResults,totalPages,movieResults)
+}
+
 data class Category(
     val title: String,
-    val liveDataMediaList: MutableLiveData<List<Media>>,
+    val liveDataMediaList: MutableLiveData<List<Media>> = MutableLiveData(),
     var fetcherFn: (() -> Unit)? = null
-) {
+) : Entity() {
     fun updateMediaList(mediaList: List<Media>) {
         liveDataMediaList.postValue(mediaList)
     }

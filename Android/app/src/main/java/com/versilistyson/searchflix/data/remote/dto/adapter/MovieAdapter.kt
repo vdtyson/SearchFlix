@@ -13,12 +13,13 @@ object MovieAdapter {
 
         reader.beginObject()
         while (reader.hasNext()) {
-
+            // Check if next field is "results"
             when (reader.nextName()) {
 
                 "results" -> {
-
+                    // Begin array
                     reader.beginArray()
+                    // Continue through array until all movieDto objects are mapped
                     while (reader.hasNext()) {
                         val movieDto = delegate.fromJson(reader)
                         movieDto?.let {
@@ -36,7 +37,7 @@ object MovieAdapter {
                     }
                     reader.endArray()
                 }
-
+                
                 else -> {
                     reader.skipValue()
                 }

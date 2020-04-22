@@ -2,6 +2,7 @@ package com.versilistyson.searchflix.data.datasource.search
 
 import com.versilistyson.searchflix.data.remote.api.MovieApi
 import com.versilistyson.searchflix.data.remote.dto.MovieDto
+import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.data.util.NetworkResult
@@ -20,8 +21,13 @@ class MovieRemoteSource
         return response.getResult()
     }
 
-    suspend fun fetchPopularMovies(language: String, page: Int): Either<Failure, NetworkResult<List<MovieDto>>> {
+    suspend fun fetchPopularMovies(language: String, page: Int): Either<Failure, NetworkResult<MoviePagedResponseDto>> {
         val response = movieApi.fetchPopularMovies(language,page)
+        return response.getResult()
+    }
+
+    suspend fun fetchTopRatedMovies(language: String, page: Int): Either<Failure, NetworkResult<MoviePagedResponseDto>> {
+        val response = movieApi.fetchTopRatedMovies(language,page)
         return response.getResult()
     }
 }

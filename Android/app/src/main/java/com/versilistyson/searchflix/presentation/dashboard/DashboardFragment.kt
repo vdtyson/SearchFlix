@@ -35,10 +35,12 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    private val popularMovieCategory by lazy {
-        Category(
-            "Popular Movies",
-            MutableLiveData()
+    private val popularMoviesCategory by lazy { Category("Popular Movies") }
+    private val topRatedMoviesCategory by lazy { Category("Top Rated Movies") }
+    private val categoryList by lazy {
+        listOf(
+            popularMoviesCategory,
+            topRatedMoviesCategory
         )
     }
 
@@ -60,6 +62,7 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setFetchersForCategories()
         setupRecyclerView()
     }
 
@@ -77,7 +80,7 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
                         Toast.makeText(this.context, "Failure", Toast.LENGTH_LONG).show()
                     }
                     is DashboardState.Loaded -> {
-                        popularMovieCategory.updateMediaList(latestState.popularMovies)
+                        updateCategories(latestState)
                     }
                     is DashboardState.LoadingCategory -> {
                         Toast.makeText(this.context, "Loading Category", Toast.LENGTH_LONG).show()
@@ -87,13 +90,18 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         )
     }
 
+    private fun updateCategories(loadedState: DashboardState.Loaded) {
+        popularMoviesCategory.updateMediaList(loadedState.popularMovies)
+        topRatedMoviesCategory.updateMediaList(loadedState.topRatedMovies)
+    }
+    private fun setFetchersForCategories() {
+        popularMoviesCategory.fetcherFn = { viewModel.getPopularMovies() }
+        topRatedMoviesCategory.fetcherFn = { viewModel.getTopRatedMovies() }
+    }
     private fun setupRecyclerView() {
-
-        popularMovieCategory.fetcherFn = { viewModel.getPopularMovies() }
-
         categoryAdapter = CategoryAdapter(
             viewLifecycleOwner,
-            listOf(popularMovieCategory),
+            categoryList,
             onCategoryTitleClickListener
         ) { media ->
             onMediaItemClick(media)

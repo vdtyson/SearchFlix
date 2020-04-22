@@ -1,6 +1,7 @@
 package com.versilistyson.searchflix.data.remote.api
 
 import com.versilistyson.searchflix.data.remote.dto.MovieDto
+import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,7 +20,13 @@ interface MovieApi {
     suspend fun fetchPopularMovies(
         @Query("language") language: String,
         @Query("page") page: Int
-    ) : Response<List<MovieDto>>
+    ) : Response<MoviePagedResponseDto>
+
+    @GET("movie/top_rated")
+    suspend fun fetchTopRatedMovies(
+        @Query("language") language: String,
+        @Query("page") page: Int
+    ) : Response<MoviePagedResponseDto>
 }
 
 /*

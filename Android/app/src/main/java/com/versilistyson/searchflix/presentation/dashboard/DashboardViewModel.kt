@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.versilistyson.searchflix.data.repository.MovieRepository
 import com.versilistyson.searchflix.domain.entities.Media
+import com.versilistyson.searchflix.domain.entities.MediaPagedResponse.MoviePagedResponse
 import com.versilistyson.searchflix.domain.exception.Failure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +15,10 @@ import javax.inject.Inject
 sealed class DashboardState {
     object LoadingCategory : DashboardState()
     data class Failed(val failure: Failure) : DashboardState()
-    data class Loaded(val popularMovies: List<Media.Movie>) : DashboardState()
+    data class Loaded(
+        val popularMovies: List<Media.Movie> = emptyList(),
+        val topRatedMovies: List<Media.Movie> = emptyList()
+    ) : DashboardState()
 }
 
 class DashboardViewModel
@@ -26,26 +30,72 @@ class DashboardViewModel
     val dashboardState: LiveData<DashboardState>
         get() = _dashboardState
 
+    private var lastLoadedState: DashboardState.Loaded? = null
+
     fun getPopularMovies(language: String = "en-US", page: Int = 1) {
 
-        setLoadingState()
+        setLoadingCategoryState()
+
         viewModelScope.launch(Dispatchers.IO) {
-            movieRepository.fetchPopularMovies(language, page).fold(::handleFailure, ::handleResult)
+            movieRepository.getPopularMovies(language, page)
+                .fold(::handleFailure) { moviePagedResponse ->
+                    val popularMoviesResult = moviePagedResponse.movieResults
+                    setLoadedState(DashboardState.Loaded(popularMovies = popularMoviesResult)) { lastState ->
+                        lastState.copy(popularMovies = popularMoviesResult)
+                    }
+                }
         }
     }
 
+    fun getTopRatedMovies(language: String = "en-US", page: Int = 1) {
+
+        setLoadingCategoryState()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            movieRepository.getTopRatedMovies(language, page)
+                .fold(::handleFailure) { moviePagedResponse ->
+                    val topRatedMoviesResult = moviePagedResponse.movieResults
+                    setLoadedState(DashboardState.Loaded(topRatedMovies = topRatedMoviesResult)) { lastState ->
+                        lastState.copy(topRatedMovies = topRatedMoviesResult)
+                    }
+                }
+        }
+
+    }
+
+    private fun setLoadedState(
+        stateIfLastNull: DashboardState.Loaded,
+        applyToLast: (DashboardState.Loaded) -> DashboardState.Loaded
+    ) {
+        when (lastLoadedState) {
+            null -> {
+                lastLoadedState = stateIfLastNull
+                _dashboardState.postValue(stateIfLastNull)
+            }
+            else -> {
+                val newState = applyToLast(lastLoadedState!!)
+                lastLoadedState = newState
+                _dashboardState.postValue(newState)
+            }
+        }
+    }
+
+    private fun setLoadingCategoryState() {
+        _dashboardState.postValue(DashboardState.LoadingCategory)
+    }
 
     private fun handleFailure(failure: Failure) {
         _dashboardState.postValue(DashboardState.Failed(failure))
+    }
+
+
+    private fun handlePagedResult(moviePagedResponse: MoviePagedResponse) {
+        TODO()
     }
 
     private fun handleResult(result: List<Media.Movie>) {
         _dashboardState.postValue(
             DashboardState.Loaded(result.toMutableList())
         )
-    }
-
-    private fun setLoadingState() {
-        _dashboardState.postValue(DashboardState.LoadingCategory)
     }
 }
