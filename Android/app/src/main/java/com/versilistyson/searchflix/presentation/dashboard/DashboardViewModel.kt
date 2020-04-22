@@ -12,8 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class DashboardState {
+    object LoadingCategory : DashboardState()
     data class Failed(val failure: Failure) : DashboardState()
-    data class Loaded(val popularMovies: MutableList<Media.Movie>): DashboardState()
+    data class Loaded(val popularMovies: List<Media.Movie>) : DashboardState()
 }
 
 class DashboardViewModel
@@ -23,12 +24,16 @@ class DashboardViewModel
         MutableLiveData<DashboardState>()
     }
     val dashboardState: LiveData<DashboardState>
-    get() = _dashboardState
+        get() = _dashboardState
 
-    fun getPopularMovies(language: String = "en-US", page: Int = 1) =
+    fun getPopularMovies(language: String = "en-US", page: Int = 1) {
+
+        setLoadingState()
         viewModelScope.launch(Dispatchers.IO) {
             movieRepository.fetchPopularMovies(language, page).fold(::handleFailure, ::handleResult)
         }
+    }
+
 
     private fun handleFailure(failure: Failure) {
         _dashboardState.postValue(DashboardState.Failed(failure))
@@ -38,5 +43,9 @@ class DashboardViewModel
         _dashboardState.postValue(
             DashboardState.Loaded(result.toMutableList())
         )
+    }
+
+    private fun setLoadingState() {
+        _dashboardState.postValue(DashboardState.LoadingCategory)
     }
 }

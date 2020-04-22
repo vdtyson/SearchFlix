@@ -8,14 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.FragmentDashboardBinding
 import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
 import com.versilistyson.searchflix.di.util.activityInjector
+import com.versilistyson.searchflix.domain.entities.Category
 import com.versilistyson.searchflix.domain.entities.Media
-import com.versilistyson.searchflix.presentation.adapters.MediaAdapter
+import com.versilistyson.searchflix.presentation.adapters.CategoryAdapter
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
 import javax.inject.Inject
 
@@ -24,22 +26,20 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     @Inject
     lateinit var daggerViewModelFactory: DaggerViewModelFactory
-
-
     private val viewModel: DashboardViewModel by viewModels {
         daggerViewModelFactory
     }
 
-    private val mediaAdapter by lazy {
-        MediaAdapter<Media.Movie>(
-            mutableListOf(),
-            View.OnClickListener {
-                Toast.makeText(this.context, "Item Clicked", Toast.LENGTH_LONG).show()
-            }
-        )
+    private lateinit var categoryAdapter: CategoryAdapter
+    private val linearLayoutManager by lazy {
+        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
-    private val layoutManager by lazy {
-        LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+
+    private val popularMovieCategory by lazy {
+        Category(
+            "Popular Movies",
+            MutableLiveData()
+        )
     }
 
     override lateinit var binding: FragmentDashboardBinding
@@ -65,7 +65,6 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     override fun onStart() {
         super.onStart()
-        viewModel.getPopularMovies()
         renderState()
     }
 
@@ -78,7 +77,10 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
                         Toast.makeText(this.context, "Failure", Toast.LENGTH_LONG).show()
                     }
                     is DashboardState.Loaded -> {
-                        mediaAdapter.addAll(latestState.popularMovies)
+                        popularMovieCategory.updateMediaList(latestState.popularMovies)
+                    }
+                    is DashboardState.LoadingCategory -> {
+                        Toast.makeText(this.context, "Loading Category", Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -86,7 +88,27 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
     }
 
     private fun setupRecyclerView() {
-        binding.recyclerView.adapter = mediaAdapter
-        binding.recyclerView.layoutManager = layoutManager
+
+        popularMovieCategory.fetcherFn = { viewModel.getPopularMovies() }
+
+        categoryAdapter = CategoryAdapter(
+            viewLifecycleOwner,
+            listOf(popularMovieCategory),
+            onCategoryTitleClickListener
+        ) { media ->
+            onMediaItemClick(media)
+        }
+
+        binding.categoryRecyclerView.layoutManager = linearLayoutManager
+        binding.categoryRecyclerView.adapter = categoryAdapter
+    }
+
+    private val onCategoryTitleClickListener =
+        View.OnClickListener {
+            Toast.makeText(this.context, "Title Clicked", Toast.LENGTH_SHORT).show()
+        }
+
+    private fun onMediaItemClick(media: Media) {
+        Toast.makeText(this.context, "Media Title: ${media.name}", Toast.LENGTH_LONG).show()
     }
 }

@@ -28,8 +28,8 @@
         android:id="@+id/movieCategoryDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="18dp"
         android:background="#31C7C7CC"/>
 
 </LinearLayout>

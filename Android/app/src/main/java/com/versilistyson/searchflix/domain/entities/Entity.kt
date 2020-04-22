@@ -1,5 +1,7 @@
 package com.versilistyson.searchflix.domain.entities
 
+import androidx.lifecycle.MutableLiveData
+
 sealed class Entity
 
 sealed class Media(val id: Int, val name: String = "", val summary: String = "", val imagePath: String = "") : Entity() {
@@ -21,7 +23,17 @@ sealed class Media(val id: Int, val name: String = "", val summary: String = "",
     ) : Media(showId,title, overview, posterPath)
 }
 
-sealed class Category(val title: String, val mediaList: MutableList<Media>) {
-    data class PopularMovies(val movies: MutableList<Media.Movie>) : Category("Popular Movies", movies.toMutableList())
+data class Category(
+    val title: String,
+    val liveDataMediaList: MutableLiveData<List<Media>>,
+    var fetcherFn: (() -> Unit)? = null
+) {
+    fun updateMediaList(mediaList: List<Media>) {
+        liveDataMediaList.postValue(mediaList)
+    }
+
+    fun fetchMedia() = fetcherFn?.let { fn ->
+        fn()
+    }
 }
 
