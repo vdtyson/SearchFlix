@@ -11,7 +11,7 @@ data class MoviePagedResponseDto(
     val totalResults: Int,
     @Json(name = "total_pages")
     val totalPages: Int,
-    @field:Json(name = "results")
+    @Json(name = "results")//Json(name = "results")
     val movieDtoResults: List<MovieDto>
 ) : Dto<MoviePagedResponse>() {
 

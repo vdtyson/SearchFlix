@@ -17,7 +17,8 @@ sealed class DashboardState {
     data class Failed(val failure: Failure) : DashboardState()
     data class Loaded(
         val popularMovies: List<Media.Movie> = emptyList(),
-        val topRatedMovies: List<Media.Movie> = emptyList()
+        val topRatedMovies: List<Media.Movie> = emptyList(),
+        val upcomingMovies: List<Media.Movie> = emptyList()
     ) : DashboardState()
 }
 
@@ -42,6 +43,21 @@ class DashboardViewModel
                     val popularMoviesResult = moviePagedResponse.movieResults
                     setLoadedState(DashboardState.Loaded(popularMovies = popularMoviesResult)) { lastState ->
                         lastState.copy(popularMovies = popularMoviesResult)
+                    }
+                }
+        }
+    }
+
+    fun getUpcomingMovies(language: String = "en-US") {
+
+        setLoadingCategoryState()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            movieRepository.getUpcomingMovies(language)
+                .fold(::handleFailure) { movieSingleResponse ->
+                    val upcomingMoviesResult = movieSingleResponse.movieResults
+                    setLoadedState(DashboardState.Loaded(upcomingMovies = upcomingMoviesResult)) { lastState ->
+                        lastState.copy(upcomingMovies = upcomingMoviesResult)
                     }
                 }
         }

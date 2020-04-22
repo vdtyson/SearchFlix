@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.versilistyson.searchflix.R
@@ -37,10 +36,12 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     private val popularMoviesCategory by lazy { Category("Popular Movies") }
     private val topRatedMoviesCategory by lazy { Category("Top Rated Movies") }
+    private val upcomingMoviesCategory by lazy {Category("Upcoming Movies")}
     private val categoryList by lazy {
         listOf(
             popularMoviesCategory,
-            topRatedMoviesCategory
+            topRatedMoviesCategory,
+            upcomingMoviesCategory
         )
     }
 
@@ -90,13 +91,15 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         )
     }
 
-    private fun updateCategories(loadedState: DashboardState.Loaded) {
-        popularMoviesCategory.updateMediaList(loadedState.popularMovies)
-        topRatedMoviesCategory.updateMediaList(loadedState.topRatedMovies)
+    private fun updateCategories(state: DashboardState.Loaded) {
+        popularMoviesCategory.updateMediaList(state.popularMovies)
+        topRatedMoviesCategory.updateMediaList(state.topRatedMovies)
+        upcomingMoviesCategory.updateMediaList(state.upcomingMovies)
     }
     private fun setFetchersForCategories() {
         popularMoviesCategory.fetcherFn = { viewModel.getPopularMovies() }
         topRatedMoviesCategory.fetcherFn = { viewModel.getTopRatedMovies() }
+        upcomingMoviesCategory.fetcherFn = { viewModel.getUpcomingMovies() }
     }
     private fun setupRecyclerView() {
         categoryAdapter = CategoryAdapter(

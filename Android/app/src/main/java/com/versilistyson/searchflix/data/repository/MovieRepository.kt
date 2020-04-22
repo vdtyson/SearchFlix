@@ -1,11 +1,15 @@
 package com.versilistyson.searchflix.data.repository
 
 import com.versilistyson.searchflix.data.datasource.search.MovieRemoteSource
+import com.versilistyson.searchflix.data.remote.dto.Dto
 import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
+import com.versilistyson.searchflix.data.remote.dto.MovieSingleResponseDto
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.data.util.NetworkResult
 import com.versilistyson.searchflix.domain.entities.MediaPagedResponse.MoviePagedResponse
+import com.versilistyson.searchflix.domain.entities.MediaSingleResponse.MovieSingleResponse
+import com.versilistyson.searchflix.domain.entities.MediaSingleResponse
 import javax.inject.Inject
 
 class MovieRepository
@@ -16,7 +20,9 @@ class MovieRepository
         page: Int = 1
     ): Either<Failure, MoviePagedResponse> {
         val response = movieRemoteSource.fetchPopularMovies(language, page)
-        return foldAndGetPagedResponse(response)
+        return response.foldAndGet(::handleFailure) { networkResult ->
+            handleNetworkResult(networkResult, MoviePagedResponse())
+        }
     }
 
     suspend fun getTopRatedMovies(
@@ -24,7 +30,18 @@ class MovieRepository
         page: Int = 1
     ): Either<Failure, MoviePagedResponse> {
         val response = movieRemoteSource.fetchTopRatedMovies(language, page)
-        return foldAndGetPagedResponse(response)
+        return response.foldAndGet(::handleFailure) { networkResult ->
+            handleNetworkResult(networkResult, MoviePagedResponse())
+        }
+    }
+
+    suspend fun getUpcomingMovies(
+        language: String = "en-US"
+    ): Either<Failure, MovieSingleResponse> {
+        val response = movieRemoteSource.fetchUpcomingMovies(language)
+        return response.foldAndGet(::handleFailure) { networkResult ->
+            handleNetworkResult(networkResult, MovieSingleResponse())
+        }
     }
 
     private suspend fun queryMovies(
@@ -37,20 +54,12 @@ class MovieRepository
         TODO()
     }
 
-    private fun foldAndGetPagedResponse(response: Either<Failure, NetworkResult<MoviePagedResponseDto>>) =
-        response.foldAndGet(::handleFailure, ::handlePagedResult)
-
-    private fun handlePagedResult(networkResult: NetworkResult<MoviePagedResponseDto>): Either<Failure, MoviePagedResponse> =
-        when (networkResult) {
-            is NetworkResult.Empty -> Either.Right(MoviePagedResponse())
+    private fun <T: Dto<E>, E> handleNetworkResult(networkResult: NetworkResult<T>, default: E) =
+        when(networkResult) {
+            is NetworkResult.Empty -> Either.Right(default)
             is NetworkResult.Data -> Either.Right(networkResult.value.mapToEntity())
         }
 
-    private fun handleResult() {
-        TODO()
-    }
-
-    // TODO: Maybe add some feature failures
-    private fun handleFailure(failure: Failure): Either<Failure, MoviePagedResponse> =
+    private fun <T> handleFailure(failure: Failure): Either<Failure, T> =
         Either.Left(failure)
 }

@@ -2,6 +2,7 @@ package com.versilistyson.searchflix.data.remote.api
 
 import com.versilistyson.searchflix.data.remote.dto.MovieDto
 import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
+import com.versilistyson.searchflix.data.remote.dto.MovieSingleResponseDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -27,6 +28,11 @@ interface MovieApi {
         @Query("language") language: String,
         @Query("page") page: Int
     ) : Response<MoviePagedResponseDto>
+
+    @GET("movie/upcoming")
+    suspend fun fetchUpcomingMovies(
+        @Query("language") language: String
+    ) : Response<MovieSingleResponseDto>
 }
 
 /*

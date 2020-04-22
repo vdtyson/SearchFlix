@@ -14,7 +14,9 @@ data class MovieDto(
     @Json(name = "overview")
     val overview: String,
     @Json(name = "poster_path")
-    val posterPath: String,
+    val posterPath: String?,
+    @Json(name = "backdrop_path")
+    val backdropPath: String?,
     @Json(name = "popularity")
     val popularity: Float,
     @Json(name = "vote_average")
@@ -28,7 +30,16 @@ data class MovieDto(
                     title = title,
                     releaseDate = releaseDate,
                     overview = overview,
-                    posterPath = posterPath,
+                    posterPath =
+                    when (posterPath) {
+                        null -> ""
+                        else -> posterPath
+                    },
+                    backdropPath =
+                    when (backdropPath) {
+                        null -> ""
+                        else -> backdropPath
+                    },
                     popularity = popularity,
                     voteAverage = voteAverage
                 )

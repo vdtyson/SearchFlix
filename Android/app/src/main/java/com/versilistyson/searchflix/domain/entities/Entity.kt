@@ -11,6 +11,7 @@ sealed class Media(val id: Int, val name: String = "", val summary: String = "",
         val releaseDate: String = "",
         val overview: String = "",
         val posterPath: String = "",
+        val backdropPath: String = "",
         val popularity: Float = 50f,
         val voteAverage: Float = 5f
     ) : Media(movieId, title,overview, posterPath)
@@ -21,6 +22,14 @@ sealed class Media(val id: Int, val name: String = "", val summary: String = "",
         val overview: String = "",
         val posterPath: String = ""
     ) : Media(showId,title, overview, posterPath)
+}
+
+sealed class MediaSingleResponse(
+    val results: List<Media>
+) : Entity() {
+    data class MovieSingleResponse(
+        val movieResults: List<Media.Movie> = emptyList()
+    ) : MediaSingleResponse(movieResults)
 }
 
 sealed class MediaPagedResponse(
