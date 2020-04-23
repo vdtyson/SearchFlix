@@ -3,6 +3,8 @@ package com.versilistyson.searchflix.data.remote.dto
 import com.squareup.moshi.Json
 import com.versilistyson.searchflix.domain.common.Mappable
 import com.versilistyson.searchflix.domain.entities.Media.Movie
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class MovieDto(
     @Json(name = "id")
@@ -20,7 +22,9 @@ data class MovieDto(
     @Json(name = "popularity")
     val popularity: Float,
     @Json(name = "vote_average")
-    val voteAverage: Float
+    val voteAverage: Float,
+    @Json(name = "video")
+    val hasVideo: Boolean
 ) : Dto<Movie>() {
     override val entityMapper: Mappable<Movie>
         get() = object : Mappable<Movie> {
@@ -28,7 +32,7 @@ data class MovieDto(
                 Movie(
                     movieId = id,
                     title = title,
-                    releaseDate = releaseDate,
+                    movieReleaseDate = releaseDate,
                     overview = overview,
                     moviePosterPath =
                     when (posterPath) {

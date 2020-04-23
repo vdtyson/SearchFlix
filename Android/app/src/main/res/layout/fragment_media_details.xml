@@ -50,6 +50,16 @@
                         android:id="@+id/tv_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
+                    <TextView
+                        app:layout_constraintTop_toBottomOf="@id/tv_title"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textSize="30sp"
+                        android:text="2019"
+                        android:id="@+id/tv_release_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>

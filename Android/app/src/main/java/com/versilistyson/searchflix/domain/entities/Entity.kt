@@ -2,11 +2,12 @@ package com.versilistyson.searchflix.domain.entities
 
 import androidx.lifecycle.MutableLiveData
 import java.io.Serializable
+import java.util.*
 
 // TODO: Change to Parcelable?
-sealed class Entity: Serializable
+sealed class Entity : Serializable
 
-enum class MediaType: Serializable {
+enum class MediaType : Serializable {
     TV,
     MOVIE
 }
@@ -15,6 +16,7 @@ sealed class Media(
     val id: Int,
     val name: String,
     val summary: String,
+    val releaseDate: String,
     val posterPath: String,
     val backdropPath: String,
     val type: MediaType
@@ -23,21 +25,38 @@ sealed class Media(
     data class Movie(
         val movieId: Int,
         val title: String = "",
-        val releaseDate: String = "",
         val overview: String = "",
+        val movieReleaseDate: String,
         val moviePosterPath: String = "",
         val movieBackdropPath: String = "",
         val popularity: Float = 50f,
         val voteAverage: Float = 5f
-    ) : Media(movieId, title, overview, moviePosterPath, movieBackdropPath, MediaType.MOVIE)
+    ) : Media(
+        movieId,
+        title,
+        overview,
+        movieReleaseDate,
+        moviePosterPath,
+        movieBackdropPath,
+        MediaType.MOVIE
+    )
 
     data class Show(
         val showId: Int = 0,
         val title: String = "",
         val overview: String = "",
+        val showReleaseDate: String,
         val showPosterPath: String = "",
         val showBackdropPath: String = ""
-    ) : Media(showId, title, overview, showPosterPath, showBackdropPath, MediaType.TV)
+    ) : Media(
+        showId,
+        title,
+        overview,
+        showReleaseDate,
+        showPosterPath,
+        showBackdropPath,
+        MediaType.TV
+    )
 }
 
 sealed class MediaSingleResponse(
