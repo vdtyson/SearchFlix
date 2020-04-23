@@ -2,7 +2,6 @@ package com.versilistyson.searchflix.domain.entities
 
 import androidx.lifecycle.MutableLiveData
 import java.io.Serializable
-import java.util.*
 
 // TODO: Change to Parcelable?
 sealed class Entity : Serializable
@@ -19,7 +18,9 @@ sealed class Media(
     val releaseDate: String,
     val posterPath: String,
     val backdropPath: String,
-    val type: MediaType
+    val type: MediaType,
+    val voteAverage: Double,
+    val voteCount: Int
 ) : Entity() {
 
     data class Movie(
@@ -29,8 +30,9 @@ sealed class Media(
         val movieReleaseDate: String,
         val moviePosterPath: String = "",
         val movieBackdropPath: String = "",
-        val popularity: Float = 50f,
-        val voteAverage: Float = 5f
+        val popularity: Double = 0.0,
+        val movieVoteAverage: Double = 0.0,
+        val movieVoteCount: Int = 0
     ) : Media(
         movieId,
         title,
@@ -38,7 +40,9 @@ sealed class Media(
         movieReleaseDate,
         moviePosterPath,
         movieBackdropPath,
-        MediaType.MOVIE
+        MediaType.MOVIE,
+        movieVoteAverage,
+        movieVoteCount
     )
 
     data class Show(
@@ -47,7 +51,9 @@ sealed class Media(
         val overview: String = "",
         val showReleaseDate: String,
         val showPosterPath: String = "",
-        val showBackdropPath: String = ""
+        val showBackdropPath: String = "",
+        val showVoteAverage: Double = 0.0,
+        val showVoteCount: Int = 0
     ) : Media(
         showId,
         title,
@@ -55,7 +61,9 @@ sealed class Media(
         showReleaseDate,
         showPosterPath,
         showBackdropPath,
-        MediaType.TV
+        MediaType.TV,
+        showVoteAverage,
+        showVoteCount
     )
 }
 

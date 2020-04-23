@@ -9,4 +9,6 @@
     <string name="search">Search</string>
     <string name="sample_movie_title">Pulp Fiction</string>
     <string name="category_sample_text">Thrillers</string>
+    <string name="sample_release_year">2019</string>
+    <string name="no_rating">No Rating</string>
 </resources>

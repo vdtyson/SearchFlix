@@ -3,8 +3,6 @@ package com.versilistyson.searchflix.data.remote.dto
 import com.squareup.moshi.Json
 import com.versilistyson.searchflix.domain.common.Mappable
 import com.versilistyson.searchflix.domain.entities.Media.Movie
-import java.text.SimpleDateFormat
-import java.util.*
 
 data class MovieDto(
     @Json(name = "id")
@@ -20,9 +18,11 @@ data class MovieDto(
     @Json(name = "backdrop_path")
     val backdropPath: String?,
     @Json(name = "popularity")
-    val popularity: Float,
+    val popularity: Double,
     @Json(name = "vote_average")
-    val voteAverage: Float,
+    val voteAverage: Double,
+    @Json(name = "vote_count")
+    val voteCount: Int,
     @Json(name = "video")
     val hasVideo: Boolean
 ) : Dto<Movie>() {
@@ -45,7 +45,8 @@ data class MovieDto(
                         else -> backdropPath
                     },
                     popularity = popularity,
-                    voteAverage = voteAverage
+                    movieVoteAverage = voteAverage,
+                    movieVoteCount = voteCount
                 )
         }
 }
