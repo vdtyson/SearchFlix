@@ -10,7 +10,11 @@
         android:id="@+id/dashboardFragment"
         android:name="com.versilistyson.searchflix.presentation.dashboard.DashboardFragment"
         android:label="Dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_mediaDetailsFragment"
+            app:destination="@id/mediaDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.versilistyson.searchflix.presentation.settings.SettingsFragment"
@@ -21,4 +25,13 @@
         android:name="com.versilistyson.searchflix.presentation.favorites.FavoritesFragment"
         android:label="Favorites"
         tools:layout="@layout/fragment_favorites" />
+    <fragment
+        android:id="@+id/mediaDetailsFragment"
+        android:name="com.versilistyson.searchflix.MediaDetailsFragment"
+        android:label="fragment_media_details"
+        tools:layout="@layout/fragment_media_details" >
+        <argument
+            android:name="media"
+            app:argType="com.versilistyson.searchflix.domain.entities.Media" />
+    </fragment>
 </navigation>

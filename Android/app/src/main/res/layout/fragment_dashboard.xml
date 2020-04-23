@@ -7,10 +7,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
-            android:orientation="vertical"
+            tools:orientation="vertical"
             tools:listitem="@layout/list_item_category"
-            android:id="@+id/recycler_view"
+            android:id="@+id/categoryRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <!--<com.arlib.floatingsearchview.FloatingSearchView

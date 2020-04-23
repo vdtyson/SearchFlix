@@ -1,9 +1,13 @@
 package com.versilistyson.searchflix.di.module
 
-import com.versilistyson.searchflix.data.network.inteceptors.AuthorizationInterceptor
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
+import com.versilistyson.searchflix.data.util.NetworkConstants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -12,12 +16,17 @@ import javax.inject.Singleton
 @Module
 object NetworkingModule {
 
-    private val BASE_URL = "https://api.themoviedb.org/3"
+
+    @JvmStatic @Singleton
+    @Provides
+    fun provideHttpLoggingInteceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply { this.level = HttpLoggingInterceptor.Level.BODY }
 
     @JvmStatic
     @Singleton @Provides
-    fun provideOkHttpClient(): OkHttpClient =
+    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(AuthorizationInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -26,8 +35,15 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    fun provideMoshiConverterFactory(): MoshiConverterFactory =
-        MoshiConverterFactory.create()
+    fun provideMoshi(): Moshi =
+        Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
+    @JvmStatic
+    @Singleton @Provides
+    fun provideMoshiConverterFactory(moshi: Moshi): MoshiConverterFactory =
+        MoshiConverterFactory.create(moshi)
 
     @JvmStatic
     @Singleton @Provides
@@ -38,8 +54,6 @@ object NetworkingModule {
         Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(moshiConverterFactory)
-            .baseUrl(BASE_URL)
+            .baseUrl(NetworkConstants.TMDB_V3_BASE_URL)
             .build()
-
-
 }

@@ -1,11 +1,8 @@
-package com.versilistyson.searchflix.data.network.inteceptors
+package com.versilistyson.searchflix.data.remote.inteceptors
 
-import android.content.Context
 import com.versilistyson.searchflix.BuildConfig
-import com.versilistyson.searchflix.R
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
 
 object AuthorizationInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

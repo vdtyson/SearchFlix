@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingVertical="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.google.android.material.card.MaterialCardView
+        app:cardElevation="10dp"
+        app:cardCornerRadius="8dp"
         android:layout_marginHorizontal="8dp"
         android:id="@+id/cardView_movie"
         android:layout_width="130dp"
-        android:layout_height="200dp">
+        android:layout_height="220dp">
         <LinearLayout
             android:weightSum="10"
             android:orientation="vertical"
@@ -16,7 +19,7 @@
             <ImageView
                 android:id="@+id/imageViewMediaPoster"
                 android:scaleType="fitXY"
-                android:src="@drawable/pulp_fiction_poster2"
+                android:src="@drawable/tmdb_sample_poster"
                 android:layout_weight="8"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"/>

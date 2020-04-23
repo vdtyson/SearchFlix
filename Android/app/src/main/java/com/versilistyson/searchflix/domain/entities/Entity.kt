@@ -1,25 +1,79 @@
 package com.versilistyson.searchflix.domain.entities
 
-sealed class Entity
+import androidx.lifecycle.MutableLiveData
+import java.io.Serializable
 
-sealed class Media(val name: String = "", val summary: String = "", val imagePath: String = "") : Entity() {
+// TODO: Change to Parcelable?
+sealed class Entity: Serializable
+
+enum class MediaType: Serializable {
+    TV,
+    MOVIE
+}
+
+sealed class Media(
+    val id: Int,
+    val name: String,
+    val summary: String,
+    val posterPath: String,
+    val backdropPath: String,
+    val type: MediaType
+) : Entity() {
+
     data class Movie(
+        val movieId: Int,
         val title: String = "",
         val releaseDate: String = "",
         val overview: String = "",
-        val posterPath: String = "",
-        val popularity: Int = 50,
-        val voteAverage: Int = 5
-    ) : Media(title,overview, posterPath)
+        val moviePosterPath: String = "",
+        val movieBackdropPath: String = "",
+        val popularity: Float = 50f,
+        val voteAverage: Float = 5f
+    ) : Media(movieId, title, overview, moviePosterPath, movieBackdropPath, MediaType.MOVIE)
 
     data class Show(
+        val showId: Int = 0,
         val title: String = "",
         val overview: String = "",
-        val posterPath: String = ""
-    ) : Media(title, overview, posterPath)
+        val showPosterPath: String = "",
+        val showBackdropPath: String = ""
+    ) : Media(showId, title, overview, showPosterPath, showBackdropPath, MediaType.TV)
 }
 
-sealed class Category(val title: String, val mediaList: MutableList<Media>) {
-    data class PopularMovies(val movies: MutableList<Media.Movie>) : Category("Popular Movies", movies.toMutableList())
+sealed class MediaSingleResponse(
+    val results: List<Media>
+) : Entity() {
+
+    data class MovieSingleResponse(
+        val movieResults: List<Media.Movie> = emptyList()
+    ) : MediaSingleResponse(movieResults)
+}
+
+sealed class MediaPagedResponse(
+    val page: Int,
+    val totalNumOfResults: Int,
+    val totalNumOfPages: Int,
+    val results: List<Media>
+) : Entity() {
+    data class MoviePagedResponse(
+        val currentPage: Int = 0,
+        val totalResults: Int = 0,
+        val totalPages: Int = 0,
+        val movieResults: List<Media.Movie> = emptyList()
+    ) : MediaPagedResponse(currentPage, totalResults, totalPages, movieResults)
+}
+
+data class Category(
+    val title: String,
+    val liveDataMediaList: MutableLiveData<List<Media>> = MutableLiveData(),
+    var fetcherFn: (() -> Unit)? = null
+) : Entity() {
+    fun updateMediaList(mediaList: List<Media>) {
+        liveDataMediaList.postValue(mediaList)
+    }
+
+    fun fetchMedia() = fetcherFn?.let { fn ->
+        fn()
+    }
 }
 
