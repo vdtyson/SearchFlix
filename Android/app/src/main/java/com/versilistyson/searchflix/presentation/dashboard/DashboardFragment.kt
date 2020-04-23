@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.FragmentDashboardBinding
@@ -36,7 +37,7 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     private val popularMoviesCategory by lazy { Category("Popular Movies") }
     private val topRatedMoviesCategory by lazy { Category("Top Rated Movies") }
-    private val upcomingMoviesCategory by lazy {Category("Upcoming Movies")}
+    private val upcomingMoviesCategory by lazy { Category("Upcoming Movies") }
     private val categoryList by lazy {
         listOf(
             popularMoviesCategory,
@@ -96,11 +97,13 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         topRatedMoviesCategory.updateMediaList(state.topRatedMovies)
         upcomingMoviesCategory.updateMediaList(state.upcomingMovies)
     }
+
     private fun setFetchersForCategories() {
         popularMoviesCategory.fetcherFn = { viewModel.getPopularMovies() }
         topRatedMoviesCategory.fetcherFn = { viewModel.getTopRatedMovies() }
         upcomingMoviesCategory.fetcherFn = { viewModel.getUpcomingMovies() }
     }
+
     private fun setupRecyclerView() {
         categoryAdapter = CategoryAdapter(
             viewLifecycleOwner,
@@ -120,6 +123,14 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         }
 
     private fun onMediaItemClick(media: Media) {
-        Toast.makeText(this.context, "Media Title: ${media.name}", Toast.LENGTH_LONG).show()
+        val toMediaDetailsFragment =
+            DashboardFragmentDirections.actionDashboardFragmentToMediaDetailsFragment(
+                mediaType = media.type,
+                mediaId = media.id,
+                mediaTitle = media.name,
+                mediaPosterPath = media.posterPath,
+                mediaBackdropPath = media.backdropPath
+            )
+        findNavController().navigate(toMediaDetailsFragment)
     }
 }

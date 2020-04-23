@@ -24,7 +24,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String","TMDB_KEY", apikeyProperties['TMDB_KEY'])
+        buildConfigField("String", "TMDB_KEY", apikeyProperties['TMDB_KEY'])
     }
 
     buildTypes {

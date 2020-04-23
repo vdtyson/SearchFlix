@@ -25,7 +25,7 @@ class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener?)
 
         fun bindTo(mediaItem: Media.Movie?) {
             mediaItem?.let {
-                Picasso.get().load(mediaItem.imagePath).into(mediaPoster)
+                Picasso.get().load(mediaItem.posterPath).into(mediaPoster)
                 mediaTitle.text = mediaItem.name
             }
         }

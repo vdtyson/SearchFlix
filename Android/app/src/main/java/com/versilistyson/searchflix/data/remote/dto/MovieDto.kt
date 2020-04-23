@@ -30,12 +30,12 @@ data class MovieDto(
                     title = title,
                     releaseDate = releaseDate,
                     overview = overview,
-                    posterPath =
+                    moviePosterPath =
                     when (posterPath) {
                         null -> ""
                         else -> posterPath
                     },
-                    backdropPath =
+                    movieBackdropPath =
                     when (backdropPath) {
                         null -> ""
                         else -> backdropPath

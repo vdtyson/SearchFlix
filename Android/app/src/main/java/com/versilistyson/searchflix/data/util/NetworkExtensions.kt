@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.versilistyson.searchflix.data.util
 
 import android.content.Context
