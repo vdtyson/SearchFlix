@@ -24,14 +24,12 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+    fun provideOkHttpClientBuilder(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient.Builder =
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(AuthorizationInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
 
     @JvmStatic
     @Singleton @Provides
@@ -47,13 +45,9 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
+    fun provideRetrofitBuilder(
         moshiConverterFactory: MoshiConverterFactory
-    ) : Retrofit =
+    ) : Retrofit.Builder =
         Retrofit.Builder()
-            .client(okHttpClient)
             .addConverterFactory(moshiConverterFactory)
-            .baseUrl(NetworkConstants.TMDB_V3_BASE_URL)
-            .build()
 }

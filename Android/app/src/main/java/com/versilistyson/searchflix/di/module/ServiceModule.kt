@@ -1,9 +1,12 @@
 package com.versilistyson.searchflix.di.module
 
 import com.versilistyson.searchflix.data.remote.api.MovieApi
+import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
+import com.versilistyson.searchflix.data.util.NetworkConstants
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -12,7 +15,25 @@ object ServiceModule {
 
     @Singleton @JvmStatic
     @Provides
-    fun provideMovieApi(retrofit: Retrofit) : MovieApi =
-        retrofit.create(MovieApi::class.java)
+    fun provideMovieApi(
+        okHttpClientBuilder: OkHttpClient.Builder,
+        retrofitBuilder: Retrofit.Builder
+    ) : MovieApi {
+
+        val okHttpClient =
+            okHttpClientBuilder
+                .addInterceptor(AuthorizationInterceptor)
+                .build()
+
+        val retrofit =
+            retrofitBuilder
+                .client(okHttpClient)
+                .baseUrl(NetworkConstants.TMDB_V3_BASE_URL)
+                .build()
+
+
+        return retrofit.create(MovieApi::class.java)
+    }
+
 
 }
