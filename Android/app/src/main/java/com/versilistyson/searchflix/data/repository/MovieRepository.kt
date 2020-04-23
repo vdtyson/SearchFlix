@@ -50,11 +50,10 @@ class MovieRepository
         language: String,
         isAdultIncluded: Boolean
     ): Either<Failure, MoviePagedResponse> {
-        val response = movieRemoteSource.searchMovies(query, page, language, isAdultIncluded)
         TODO()
     }
 
-    private fun <T: Dto<E>, E> handleNetworkResult(networkResult: NetworkResult<T>, default: E) =
+    private fun <T: Dto<E>, E> handleNetworkResult(networkResult: NetworkResult<T>, default: E): Either<Failure, E> =
         when(networkResult) {
             is NetworkResult.Empty -> Either.Right(default)
             is NetworkResult.Data -> Either.Right(networkResult.value.mapToEntity())
