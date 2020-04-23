@@ -9,7 +9,7 @@ object UTellyAuthorizationInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val newRequest =
             chain.request().newBuilder()
-                .addHeader("x-rapid-host", NetworkConstants.RAPID_API_HOST)
+                .addHeader("x-rapidapi-host", NetworkConstants.RAPID_API_HOST)
                 .addHeader("x-rapidapi-key", BuildConfig.RAPID_API_KEY)
                 .build()
 
