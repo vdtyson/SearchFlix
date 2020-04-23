@@ -13,7 +13,8 @@
         tools:layout="@layout/fragment_dashboard" >
         <action
             android:id="@+id/action_dashboardFragment_to_mediaDetailsFragment"
-            app:destination="@id/mediaDetailsFragment" />
+            app:destination="@id/mediaDetailsFragment"
+            app:enterAnim="@anim/fragment_fade_enter" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

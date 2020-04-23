@@ -22,7 +22,7 @@
                 android:src="@drawable/tmdb_sample_backdrop" />
         </FrameLayout>
 
-
+        <!-- TODO: Set corner radius for bottom of card to 0dp -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_details"
             app:cardCornerRadius="8dp"
@@ -33,6 +33,21 @@
             android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="510dp">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:textAlignment="viewStart"
+                        android:textSize="18sp"
+                        android:text="@string/sample_movie_title"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginStart="150dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
 

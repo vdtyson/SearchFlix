@@ -35,6 +35,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.tvTitle.text = args.media.name
         Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + args.media.posterPath).into(binding.ivPoster)
         Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + args.media.backdropPath).into(binding.ivBackDrop)
     }
