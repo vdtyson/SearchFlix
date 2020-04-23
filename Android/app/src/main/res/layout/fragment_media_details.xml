@@ -26,7 +26,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_details"
             app:cardCornerRadius="8dp"
-            android:elevation="8dp"
+            android:elevation="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +56,7 @@
 
         <com.google.android.material.card.MaterialCardView
             app:cardCornerRadius="8dp"
-            android:elevation="10dp"
+            android:elevation="8dp"
             android:layout_marginStart="12dp"
             app:layout_constraintStart_toStartOf="@id/cv_details"
             app:layout_constraintBottom_toBottomOf="@id/cv_details"
