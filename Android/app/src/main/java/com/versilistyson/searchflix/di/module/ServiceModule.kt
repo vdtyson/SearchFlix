@@ -1,9 +1,8 @@
 package com.versilistyson.searchflix.di.module
 
 import com.versilistyson.searchflix.data.remote.api.MovieApi
-import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
+import com.versilistyson.searchflix.data.remote.inteceptors.TMDBAuthorizationInterceptor
 import com.versilistyson.searchflix.data.util.NetworkConstants
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -22,7 +21,7 @@ object ServiceModule {
 
         val okHttpClient =
             okHttpClientBuilder
-                .addInterceptor(AuthorizationInterceptor)
+                .addInterceptor(TMDBAuthorizationInterceptor)
                 .build()
 
         val retrofit =

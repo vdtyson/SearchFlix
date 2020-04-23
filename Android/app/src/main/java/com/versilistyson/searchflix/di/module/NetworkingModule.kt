@@ -2,8 +2,6 @@ package com.versilistyson.searchflix.di.module
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
-import com.versilistyson.searchflix.data.util.NetworkConstants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

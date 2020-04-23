@@ -4,7 +4,7 @@ import com.versilistyson.searchflix.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
-object AuthorizationInterceptor : Interceptor {
+object TMDBAuthorizationInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val newRequest =
             chain.request().newBuilder()
