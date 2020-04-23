@@ -31,9 +31,6 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
     }
 
     private lateinit var categoryAdapter: CategoryAdapter
-    private val linearLayoutManager by lazy {
-        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-    }
 
     private val popularMoviesCategory by lazy { Category("Popular Movies") }
     private val topRatedMoviesCategory by lazy { Category("Top Rated Movies") }
@@ -105,6 +102,10 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
     }
 
     private fun setupRecyclerView() {
+
+        val linearLayoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
         categoryAdapter = CategoryAdapter(
             viewLifecycleOwner,
             categoryList,
