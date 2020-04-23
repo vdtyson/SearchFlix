@@ -67,6 +67,17 @@ sealed class Media(
     )
 }
 
+data class StreamLookupResponse(
+    val streamLocationsResult: StreamLocationsResult // collection
+) : Entity()
+data class StreamLocationsResult(
+    val streamLocations: List<StreamingLocation> // locations
+) : Entity()
+data class StreamingLocation(
+    val iconPath: String = "", // icon
+    val displayName: String = "", // display_name
+    val pathToMedia: String = "" // url
+) : Entity()
 sealed class MediaSingleResponse(
     val results: List<Media>
 ) : Entity() {

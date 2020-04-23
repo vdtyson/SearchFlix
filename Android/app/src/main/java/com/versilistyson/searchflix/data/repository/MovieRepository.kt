@@ -2,14 +2,11 @@ package com.versilistyson.searchflix.data.repository
 
 import com.versilistyson.searchflix.data.datasource.search.MovieRemoteSource
 import com.versilistyson.searchflix.data.remote.dto.Dto
-import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
-import com.versilistyson.searchflix.data.remote.dto.MovieSingleResponseDto
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.data.util.NetworkResult
 import com.versilistyson.searchflix.domain.entities.MediaPagedResponse.MoviePagedResponse
 import com.versilistyson.searchflix.domain.entities.MediaSingleResponse.MovieSingleResponse
-import com.versilistyson.searchflix.domain.entities.MediaSingleResponse
 import javax.inject.Inject
 
 class MovieRepository
