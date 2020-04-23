@@ -124,14 +124,10 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         }
 
     private fun onMediaItemClick(media: Media) {
+
         val toMediaDetailsFragment =
-            DashboardFragmentDirections.actionDashboardFragmentToMediaDetailsFragment(
-                mediaType = media.type,
-                mediaId = media.id,
-                mediaTitle = media.name,
-                mediaPosterPath = media.posterPath,
-                mediaBackdropPath = media.backdropPath
-            )
+            DashboardFragmentDirections.actionDashboardFragmentToMediaDetailsFragment(media)
+
         findNavController().navigate(toMediaDetailsFragment)
     }
 }

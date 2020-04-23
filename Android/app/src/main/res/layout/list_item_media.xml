@@ -19,7 +19,7 @@
             <ImageView
                 android:id="@+id/imageViewMediaPoster"
                 android:scaleType="fitXY"
-                android:src="@drawable/pulp_fiction_poster2"
+                android:src="@drawable/tmdb_sample_poster"
                 android:layout_weight="8"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"/>

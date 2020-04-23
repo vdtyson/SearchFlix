@@ -1,10 +1,12 @@
 package com.versilistyson.searchflix.domain.entities
 
 import androidx.lifecycle.MutableLiveData
+import java.io.Serializable
 
-sealed class Entity
+// TODO: Change to Parcelable?
+sealed class Entity: Serializable
 
-enum class MediaType {
+enum class MediaType: Serializable {
     TV,
     MOVIE
 }
@@ -17,6 +19,7 @@ sealed class Media(
     val backdropPath: String,
     val type: MediaType
 ) : Entity() {
+
     data class Movie(
         val movieId: Int,
         val title: String = "",
@@ -40,6 +43,7 @@ sealed class Media(
 sealed class MediaSingleResponse(
     val results: List<Media>
 ) : Entity() {
+
     data class MovieSingleResponse(
         val movieResults: List<Media.Movie> = emptyList()
     ) : MediaSingleResponse(movieResults)

@@ -36,7 +36,7 @@ class MediaAdapter(
 
         fun bindTo(media: Media?) {
             media?.let {
-                Picasso.get().load(NetworkConstants.TMDB_IMAGE_BASE_URL + media.posterPath).into(poster)
+                Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + media.posterPath).into(poster)
                 title.text = media.name
 
                 onMediaItemClick?.let { onMediaItemClick ->
