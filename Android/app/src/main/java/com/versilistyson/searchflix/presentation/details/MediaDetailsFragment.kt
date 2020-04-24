@@ -3,10 +3,12 @@ package com.versilistyson.searchflix.presentation.details
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.ViewTreeObserver
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -40,7 +42,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     private val args: MediaDetailsFragmentArgs by navArgs()
 
     private val adapter by lazy {
-        StreamingServiceAdapter() {url ->
+        StreamingServiceAdapter() { url ->
             navigateToLink(url)
         }
     }
@@ -55,8 +57,10 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         savedInstanceState: Bundle?
     ): View? {
         binding =
-            DataBindingUtil.inflate(inflater,
-                R.layout.fragment_media_details, container, false)
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.fragment_media_details, container, false
+            )
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
@@ -87,8 +91,8 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     private fun renderState() {
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,
-            androidx.lifecycle.Observer {latestState ->
-                when(val streamingPlatformState =latestState.streamingPlaformState) {
+            androidx.lifecycle.Observer { latestState ->
+                when (val streamingPlatformState = latestState.streamingPlaformState) {
 
                     MediaDetailsState.StreamingPlaformState.Loading -> {
                         binding.progressBarStreamingServices.visibility = View.VISIBLE
@@ -119,8 +123,12 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     }
 
     private fun renderSummary() {
+
         binding.tvSummary.text = args.media.summary
+
+        // TODO: "Find a way to only display read more button when original text is over 4 lines."
     }
+
     private fun renderRatings() {
 
         when (val voteCount = args.media.voteCount) {
