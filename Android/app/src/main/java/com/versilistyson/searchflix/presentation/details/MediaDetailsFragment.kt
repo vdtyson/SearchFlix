@@ -64,6 +64,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         viewModel.getAvailableStreamingPlatforms(args.media.id)
         setupRecyclerView()
         renderReleaseDate()
+        renderSummary()
         renderRatings()
         renderState()
 
@@ -91,6 +92,10 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
                 }
             }
         )
+    }
+
+    private fun renderSummary() {
+        binding.tvSummary.text = args.media.summary
     }
     private fun renderRatings() {
         when (val voteCount = args.media.voteCount) {
