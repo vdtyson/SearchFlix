@@ -88,9 +88,9 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
     }
 
     private fun setFetchersForCategories() {
+        upcomingMoviesCategory.fetcherFn = { viewModel.getUpcomingMovies() }
         popularMoviesCategory.fetcherFn = { viewModel.getPopularMovies() }
         topRatedMoviesCategory.fetcherFn = { viewModel.getTopRatedMovies() }
-        upcomingMoviesCategory.fetcherFn = { viewModel.getUpcomingMovies() }
     }
 
     private fun setupRecyclerView() {
