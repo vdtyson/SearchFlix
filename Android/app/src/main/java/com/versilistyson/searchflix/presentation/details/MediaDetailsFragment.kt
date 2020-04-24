@@ -89,16 +89,16 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { latestState ->
-                when (val streamingPlatformState = latestState.streamingPlatformState) {
+                when (val streamListsState = latestState.streamsListStateComponent) {
 
-                    MediaDetailsState.StreamingPlatformState.Loading -> {
+                    StreamsListStateComponent.Loading -> {
                         binding.progressBarStreamingServices.visibility = View.VISIBLE
                         binding.tvNotAvailable.visibility = View.GONE
                         binding.rvStreamingPlatforms.visibility = View.GONE
                     }
 
-                    is MediaDetailsState.StreamingPlatformState.Loaded -> {
-                        adapter.addAll(streamingPlatformState.availableStreamingLocations)
+                    is StreamsListStateComponent.Loaded -> {
+                        adapter.addAll(streamListsState.availableStreamingLocations)
                         when {
 
                             adapter.isEmpty() -> {

@@ -7,23 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.versilistyson.searchflix.data.repository.MovieRepository
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.domain.exception.Failure
-import com.versilistyson.searchflix.presentation.common.StateComponent
-import com.versilistyson.searchflix.presentation.common.UIState
+import com.versilistyson.searchflix.presentation.common.UIStateComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class DashboardState (
-    val popularMoviesComponent: MediaListStateComponent = MediaListStateComponent.Loading,
-    val upcomingMoviesComponent: MediaListStateComponent = MediaListStateComponent.Loading,
-    val topRatedMoviesComponent: MediaListStateComponent = MediaListStateComponent.Loading
-)
 
-sealed class MediaListStateComponent : StateComponent {
-    object Loading : MediaListStateComponent()
-    data class Error(val failure: Failure) : MediaListStateComponent()
-    data class Data(val value: List<Media>) : MediaListStateComponent()
-}
 
 
 class DashboardViewModel
@@ -37,7 +26,7 @@ class DashboardViewModel
         get() = _dashboardState
 
 
-    var currentState: DashboardState? = null
+    private var currentState: DashboardState? = null
 
     fun getPopularMovies(language: String = "en-US", page: Int = 1) {
         viewModelScope.launch {

@@ -7,16 +7,13 @@ import com.versilistyson.searchflix.data.repository.StreamRepository
 import com.versilistyson.searchflix.domain.entities.StreamLookupResponse
 import com.versilistyson.searchflix.domain.entities.StreamingLocation
 import com.versilistyson.searchflix.domain.exception.Failure
+import com.versilistyson.searchflix.presentation.common.UIState
+import com.versilistyson.searchflix.presentation.common.UIStateComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class MediaDetailsState(val streamingPlatformState: StreamingPlatformState) {
-    sealed class StreamingPlatformState {
-        object Loading : StreamingPlatformState()
-        data class Loaded(val availableStreamingLocations: List<StreamingLocation>) : StreamingPlatformState()
-    }
-}
+
 class MediaDetailsViewModel
 @Inject constructor(private val streamRepository: StreamRepository): ViewModel() {
 
@@ -30,7 +27,7 @@ class MediaDetailsViewModel
         mediaId: Int,
         country: String = "us"
     ) {
-        _mediaDetailsState.postValue(MediaDetailsState(streamingPlatformState = MediaDetailsState.StreamingPlatformState.Loading))
+        _mediaDetailsState.postValue(MediaDetailsState(streamsListStateComponent = StreamsListStateComponent.Loading))
 
         viewModelScope.launch(Dispatchers.IO) {
                 streamRepository.getAvailableStreamingPlatforms(mediaId, country).fold(::handleFailure, ::handleResult)
@@ -42,7 +39,7 @@ class MediaDetailsViewModel
         val streamLocations = streamLookupResponse.streamLocationsResult.streamLocations
 
         _mediaDetailsState.postValue(
-            MediaDetailsState(streamingPlatformState = MediaDetailsState.StreamingPlatformState.Loaded(streamLocations)))
+            MediaDetailsState(streamsListStateComponent = StreamsListStateComponent.Loaded(streamLocations)))
     }
     private fun handleFailure(failure: Failure) {
 
