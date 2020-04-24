@@ -3,12 +3,9 @@ package com.versilistyson.searchflix.presentation.details
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -92,15 +89,15 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { latestState ->
-                when (val streamingPlatformState = latestState.streamingPlaformState) {
+                when (val streamingPlatformState = latestState.streamingPlatformState) {
 
-                    MediaDetailsState.StreamingPlaformState.Loading -> {
+                    MediaDetailsState.StreamingPlatformState.Loading -> {
                         binding.progressBarStreamingServices.visibility = View.VISIBLE
                         binding.tvNotAvailable.visibility = View.GONE
                         binding.rvStreamingPlatforms.visibility = View.GONE
                     }
 
-                    is MediaDetailsState.StreamingPlaformState.Loaded -> {
+                    is MediaDetailsState.StreamingPlatformState.Loaded -> {
                         adapter.addAll(streamingPlatformState.availableStreamingLocations)
                         when {
 

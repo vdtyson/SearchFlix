@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.versilistyson.searchflix.data.repository.StreamRepository
-import com.versilistyson.searchflix.domain.entities.StreamLocationsResult
 import com.versilistyson.searchflix.domain.entities.StreamLookupResponse
 import com.versilistyson.searchflix.domain.entities.StreamingLocation
 import com.versilistyson.searchflix.domain.exception.Failure
@@ -12,10 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MediaDetailsState(val streamingPlaformState: StreamingPlaformState) {
-    sealed class StreamingPlaformState {
-        object Loading : StreamingPlaformState()
-        data class Loaded(val availableStreamingLocations: List<StreamingLocation>) : StreamingPlaformState()
+data class MediaDetailsState(val streamingPlatformState: StreamingPlatformState) {
+    sealed class StreamingPlatformState {
+        object Loading : StreamingPlatformState()
+        data class Loaded(val availableStreamingLocations: List<StreamingLocation>) : StreamingPlatformState()
     }
 }
 class MediaDetailsViewModel
@@ -31,7 +30,7 @@ class MediaDetailsViewModel
         mediaId: Int,
         country: String = "us"
     ) {
-        _mediaDetailsState.postValue(MediaDetailsState(streamingPlaformState = MediaDetailsState.StreamingPlaformState.Loading))
+        _mediaDetailsState.postValue(MediaDetailsState(streamingPlatformState = MediaDetailsState.StreamingPlatformState.Loading))
 
         viewModelScope.launch(Dispatchers.IO) {
                 streamRepository.getAvailableStreamingPlatforms(mediaId, country).fold(::handleFailure, ::handleResult)
@@ -43,7 +42,7 @@ class MediaDetailsViewModel
         val streamLocations = streamLookupResponse.streamLocationsResult.streamLocations
 
         _mediaDetailsState.postValue(
-            MediaDetailsState(streamingPlaformState = MediaDetailsState.StreamingPlaformState.Loaded(streamLocations)))
+            MediaDetailsState(streamingPlatformState = MediaDetailsState.StreamingPlatformState.Loaded(streamLocations)))
     }
     private fun handleFailure(failure: Failure) {
 

@@ -1,12 +1,12 @@
 package com.versilistyson.searchflix.presentation.dashboard
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -61,38 +61,30 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        renderState()
         setFetchersForCategories()
         setupRecyclerView()
     }
 
-    override fun onStart() {
-        super.onStart()
-        renderState()
-    }
+
 
     private fun renderState() {
         viewModel.dashboardState.observe(
             viewLifecycleOwner,
             Observer { latestState ->
-                when (latestState) {
-                    is DashboardState.Failed -> {
-                        Toast.makeText(this.context, "Failure", Toast.LENGTH_LONG).show()
-                    }
-                    is DashboardState.Loaded -> {
-                        updateCategories(latestState)
-                    }
-                    is DashboardState.LoadingCategory -> {
-                        Toast.makeText(this.context, "Loading Category", Toast.LENGTH_LONG).show()
-                    }
-                }
+                popularMoviesCategory.onStateChanged(latestState.popularMoviesComponent)
+                upcomingMoviesCategory.onStateChanged(latestState.upcomingMoviesComponent)
+                topRatedMoviesCategory.onStateChanged(latestState.topRatedMoviesComponent)
             }
         )
     }
 
-    private fun updateCategories(state: DashboardState.Loaded) {
-        popularMoviesCategory.updateMediaList(state.popularMovies)
-        topRatedMoviesCategory.updateMediaList(state.topRatedMovies)
-        upcomingMoviesCategory.updateMediaList(state.upcomingMovies)
+    private fun Category.onStateChanged(state: MediaListStateComponent) {
+        when(state) {
+            is MediaListStateComponent.Loading -> Toast.makeText(context, "${topRatedMoviesCategory.title} is loading", Toast.LENGTH_SHORT).show()
+            is MediaListStateComponent.Error -> Toast.makeText(context, "${this.title} failure: ${state.failure}", Toast.LENGTH_LONG).show()
+            is MediaListStateComponent.Data -> this.updateMediaList(state.value)
+        }
     }
 
     private fun setFetchersForCategories() {

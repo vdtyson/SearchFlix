@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.domain.entities.Category
 import com.versilistyson.searchflix.domain.entities.Media
+import kotlinx.coroutines.launch
 
 class CategoryAdapter(
     private val lifecycleOwner: LifecycleOwner,
