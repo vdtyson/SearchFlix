@@ -1,10 +1,11 @@
 package com.versilistyson.searchflix.presentation.details
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -39,7 +40,9 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     private val args: MediaDetailsFragmentArgs by navArgs()
 
     private val adapter by lazy {
-        StreamingServiceAdapter()
+        StreamingServiceAdapter() {url ->
+            navigateToLink(url)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,6 +122,12 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
                 binding.ratingBar.rating = args.media.voteAverage.toFloat()
             }
         }
+    }
+
+    private fun navigateToLink(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
     }
 
     private fun renderReleaseDate() {
