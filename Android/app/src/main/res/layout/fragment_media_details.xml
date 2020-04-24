@@ -124,7 +124,24 @@
                         android:textSize="28sp"
                         app:layout_constraintTop_toBottomOf="@id/guideline_poster_bottom" />
 
+                    <ProgressBar
+                        android:id="@+id/progress_bar_streaming_services"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"/>
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tv_not_available"
+                        android:textSize="18sp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/not_available"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"/>
+
                     <androidx.recyclerview.widget.RecyclerView
+                        android:visibility="gone"
                         android:id="@+id/rv_streaming_platforms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

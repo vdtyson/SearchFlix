@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/cvStreamingServiceBadge"
         app:layout_constraintStart_toStartOf="@id/cvStreamingServiceBadge"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Google Play"
+        android:text="@string/sample_service_name"
         android:id="@+id/tvStreamingServiceTitle"
         android:layout_width="80dp"
         android:layout_height="30dp"/>

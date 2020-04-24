@@ -83,14 +83,35 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         binding.rvStreamingPlatforms.adapter = adapter
         binding.rvStreamingPlatforms.layoutManager = layoutManager
     }
+
     private fun renderState() {
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer {latestState ->
                 when(val streamingPlatformState =latestState.streamingPlaformState) {
-                    MediaDetailsState.StreamingPlaformState.Loading -> {}
+
+                    MediaDetailsState.StreamingPlaformState.Loading -> {
+                        binding.progressBarStreamingServices.visibility = View.VISIBLE
+                        binding.tvNotAvailable.visibility = View.GONE
+                        binding.rvStreamingPlatforms.visibility = View.GONE
+                    }
+
                     is MediaDetailsState.StreamingPlaformState.Loaded -> {
                         adapter.addAll(streamingPlatformState.availableStreamingLocations)
+                        when {
+
+                            adapter.isEmpty() -> {
+                                binding.tvNotAvailable.visibility = View.VISIBLE
+                                binding.progressBarStreamingServices.visibility = View.GONE
+                                binding.rvStreamingPlatforms.visibility = View.GONE
+                            }
+
+                            else -> {
+                                binding.rvStreamingPlatforms.visibility = View.VISIBLE
+                                binding.progressBarStreamingServices.visibility = View.GONE
+                                binding.tvNotAvailable.visibility = View.GONE
+                            }
+                        }
                     }
                 }
             }
@@ -101,6 +122,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         binding.tvSummary.text = args.media.summary
     }
     private fun renderRatings() {
+
         when (val voteCount = args.media.voteCount) {
             0 -> {
                 binding.ratingBar.visibility = View.GONE
@@ -108,13 +130,6 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             }
 
             else -> {
-                val voteAverage = args.media.voteAverage.toFloat()
-
-                Toast.makeText(
-                    context,
-                    "voteCount $voteCount, voteAverage: $voteAverage",
-                    Toast.LENGTH_LONG
-                ).show()
 
                 binding.tvNotYetRated.visibility = View.GONE
                 binding.ratingBar.visibility = View.VISIBLE
@@ -131,8 +146,10 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     }
 
     private fun renderReleaseDate() {
+
         val datePattern = "yyyy-MM-dd"
         val dateFormat = SimpleDateFormat(datePattern, Locale.getDefault())
+
         when (val parsedReleaseDate = dateFormat.parse(args.media.releaseDate)) {
 
             null -> binding.tvReleaseYear.text = ""

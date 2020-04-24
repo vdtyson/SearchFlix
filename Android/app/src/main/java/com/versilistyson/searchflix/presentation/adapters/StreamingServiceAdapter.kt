@@ -52,4 +52,7 @@ class StreamingServiceAdapter(
         streamLocationList.addAll(newStreamingLocations)
         notifyDataSetChanged()
     }
+
+    fun isEmpty() = streamLocationList.isEmpty()
+
 }
