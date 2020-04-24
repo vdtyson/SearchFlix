@@ -28,7 +28,7 @@
         tools:layout="@layout/fragment_favorites" />
     <fragment
         android:id="@+id/mediaDetailsFragment"
-        android:name="com.versilistyson.searchflix.MediaDetailsFragment"
+        android:name="com.versilistyson.searchflix.presentation.details.MediaDetailsFragment"
         android:label="fragment_media_details"
         tools:layout="@layout/fragment_media_details" >
         <argument

@@ -68,11 +68,11 @@ sealed class Media(
 }
 
 data class StreamLookupResponse(
-    val streamLocationsResult: StreamLocationsResult // collection
+    val streamLocationsResult: StreamLocationsResult = StreamLocationsResult() // collection
 ) : Entity()
 
 data class StreamLocationsResult(
-    val streamLocations: List<StreamingLocation> // locations
+    val streamLocations: List<StreamingLocation> = emptyList()// locations
 ) : Entity()
 
 data class StreamingLocation(
