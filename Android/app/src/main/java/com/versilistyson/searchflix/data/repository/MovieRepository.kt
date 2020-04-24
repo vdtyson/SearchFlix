@@ -1,15 +1,12 @@
 package com.versilistyson.searchflix.data.repository
 
 import com.versilistyson.searchflix.data.datasource.search.MovieRemoteSource
-import com.versilistyson.searchflix.data.remote.dto.Dto
-import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
-import com.versilistyson.searchflix.data.remote.dto.MovieSingleResponseDto
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
-import com.versilistyson.searchflix.data.util.NetworkResult
+import com.versilistyson.searchflix.data.util.handleFailure
+import com.versilistyson.searchflix.data.util.handleNetworkResult
 import com.versilistyson.searchflix.domain.entities.MediaPagedResponse.MoviePagedResponse
 import com.versilistyson.searchflix.domain.entities.MediaSingleResponse.MovieSingleResponse
-import com.versilistyson.searchflix.domain.entities.MediaSingleResponse
 import javax.inject.Inject
 
 class MovieRepository
@@ -53,12 +50,4 @@ class MovieRepository
         TODO()
     }
 
-    private fun <T: Dto<E>, E> handleNetworkResult(networkResult: NetworkResult<T>, default: E): Either<Failure, E> =
-        when(networkResult) {
-            is NetworkResult.Empty -> Either.Right(default)
-            is NetworkResult.Data -> Either.Right(networkResult.value.mapToEntity())
-        }
-
-    private fun <T> handleFailure(failure: Failure): Either<Failure, T> =
-        Either.Left(failure)
 }

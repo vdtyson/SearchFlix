@@ -2,8 +2,6 @@ package com.versilistyson.searchflix.di.module
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.versilistyson.searchflix.data.remote.inteceptors.AuthorizationInterceptor
-import com.versilistyson.searchflix.data.util.NetworkConstants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -24,14 +22,12 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+    fun provideOkHttpClientBuilder(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient.Builder =
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(AuthorizationInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
 
     @JvmStatic
     @Singleton @Provides
@@ -47,13 +43,9 @@ object NetworkingModule {
 
     @JvmStatic
     @Singleton @Provides
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
+    fun provideRetrofitBuilder(
         moshiConverterFactory: MoshiConverterFactory
-    ) : Retrofit =
+    ) : Retrofit.Builder =
         Retrofit.Builder()
-            .client(okHttpClient)
             .addConverterFactory(moshiConverterFactory)
-            .baseUrl(NetworkConstants.TMDB_V3_BASE_URL)
-            .build()
 }

@@ -15,16 +15,14 @@ data class MoviePagedResponseDto(
     val movieDtoResults: List<MovieDto>
 ) : Dto<MoviePagedResponse>() {
 
-    override val entityMapper: Mappable<MoviePagedResponse> =
-        object : Mappable<MoviePagedResponse> {
-            override fun map(): MoviePagedResponse =
-                MoviePagedResponse(
-                    currentPage = currentPage,
-                    totalResults = totalResults,
-                    totalPages = totalPages,
-                    movieResults = movieDtoResults.map { movieDto ->
-                        movieDto.mapToEntity()
-                    }
-                )
-        }
+    override fun toEntity(): MoviePagedResponse =
+        MoviePagedResponse(
+            currentPage = currentPage,
+            totalResults = totalResults,
+            totalPages = totalPages,
+            movieResults = movieDtoResults.map { movieDto ->
+                movieDto.mapToEntity()
+            }
+        )
+
 }

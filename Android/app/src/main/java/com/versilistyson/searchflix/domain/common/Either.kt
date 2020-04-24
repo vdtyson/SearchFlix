@@ -1,5 +1,9 @@
 package com.versilistyson.searchflix.domain.common
 
+import com.versilistyson.searchflix.data.remote.dto.StreamLookupResponseDto
+import com.versilistyson.searchflix.data.util.NetworkResult
+import com.versilistyson.searchflix.domain.entities.StreamLookupResponse
+
 // https://github.com/android10/Android-CleanArchitectureKotlin/blob/master/app/src/main/kotlin/com/fernandocejas/sample/core/functional/Either.kt
 /**
  * Represents a value of one of two possible types (a disjoint union).
@@ -59,6 +63,12 @@ sealed class Either<out L, out R> {
         when(this) {
             is Left -> fnL(left)
             is Right -> fnR(right)
+        }
+
+    fun <A, B> foldAndMap (fnL: (L) -> A, fnR: (R) -> B): Either<A, B> =
+        when(this) {
+            is Left -> Either.Left(fnL(left))
+            is Right -> Right(fnR(right))
         }
 
     suspend fun sFold(fnL: suspend (L) -> Any, fnR: suspend (R) -> Any): Any =

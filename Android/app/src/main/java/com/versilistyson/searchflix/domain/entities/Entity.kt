@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import java.io.Serializable
 
 // TODO: Change to Parcelable?
-sealed class Entity: Serializable
+sealed class Entity : Serializable
 
-enum class MediaType: Serializable {
+enum class MediaType : Serializable {
     TV,
     MOVIE
 }
@@ -15,31 +15,71 @@ sealed class Media(
     val id: Int,
     val name: String,
     val summary: String,
+    val releaseDate: String,
     val posterPath: String,
     val backdropPath: String,
-    val type: MediaType
+    val type: MediaType,
+    val voteAverage: Double,
+    val voteCount: Int
 ) : Entity() {
 
     data class Movie(
         val movieId: Int,
         val title: String = "",
-        val releaseDate: String = "",
         val overview: String = "",
+        val movieReleaseDate: String,
         val moviePosterPath: String = "",
         val movieBackdropPath: String = "",
-        val popularity: Float = 50f,
-        val voteAverage: Float = 5f
-    ) : Media(movieId, title, overview, moviePosterPath, movieBackdropPath, MediaType.MOVIE)
+        val popularity: Double = 0.0,
+        val movieVoteAverage: Double = 0.0,
+        val movieVoteCount: Int = 0
+    ) : Media(
+        movieId,
+        title,
+        overview,
+        movieReleaseDate,
+        moviePosterPath,
+        movieBackdropPath,
+        MediaType.MOVIE,
+        movieVoteAverage,
+        movieVoteCount
+    )
 
     data class Show(
         val showId: Int = 0,
         val title: String = "",
         val overview: String = "",
+        val showReleaseDate: String,
         val showPosterPath: String = "",
-        val showBackdropPath: String = ""
-    ) : Media(showId, title, overview, showPosterPath, showBackdropPath, MediaType.TV)
+        val showBackdropPath: String = "",
+        val showVoteAverage: Double = 0.0,
+        val showVoteCount: Int = 0
+    ) : Media(
+        showId,
+        title,
+        overview,
+        showReleaseDate,
+        showPosterPath,
+        showBackdropPath,
+        MediaType.TV,
+        showVoteAverage,
+        showVoteCount
+    )
 }
 
+data class StreamLookupResponse(
+    val streamLocationsResult: StreamLocationsResult = StreamLocationsResult() // collection
+) : Entity()
+
+data class StreamLocationsResult(
+    val streamLocations: List<StreamingLocation> = emptyList()// locations
+) : Entity()
+
+data class StreamingLocation(
+    val iconPath: String = "", // icon
+    val displayName: String = "", // display_name
+    val pathToMedia: String = "" // url
+) : Entity()
 sealed class MediaSingleResponse(
     val results: List<Media>
 ) : Entity() {

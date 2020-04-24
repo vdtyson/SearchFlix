@@ -9,15 +9,12 @@ data class MovieSingleResponseDto(
     val movieResults: List<MovieDto>
 ) : Dto<MediaSingleResponse.MovieSingleResponse>() {
 
-    override val entityMapper: Mappable<MediaSingleResponse.MovieSingleResponse>
-        get() = object : Mappable<MediaSingleResponse.MovieSingleResponse> {
-            override fun map(): MediaSingleResponse.MovieSingleResponse =
-                MediaSingleResponse.MovieSingleResponse(
-                    movieResults.map { movieDto ->
-                        movieDto.mapToEntity()
-                    }
-                )
+    override fun toEntity(): MediaSingleResponse.MovieSingleResponse =
+        MediaSingleResponse.MovieSingleResponse(
+            movieResults.map { movieDto ->
+                movieDto.mapToEntity()
+            }
+        )
 
-        }
 
 }

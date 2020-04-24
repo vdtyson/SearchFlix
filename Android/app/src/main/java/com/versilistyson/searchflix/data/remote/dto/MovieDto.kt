@@ -18,30 +18,34 @@ data class MovieDto(
     @Json(name = "backdrop_path")
     val backdropPath: String?,
     @Json(name = "popularity")
-    val popularity: Float,
+    val popularity: Double,
     @Json(name = "vote_average")
-    val voteAverage: Float
+    val voteAverage: Double,
+    @Json(name = "vote_count")
+    val voteCount: Int,
+    @Json(name = "video")
+    val hasVideo: Boolean
 ) : Dto<Movie>() {
-    override val entityMapper: Mappable<Movie>
-        get() = object : Mappable<Movie> {
-            override fun map(): Movie =
-                Movie(
-                    movieId = id,
-                    title = title,
-                    releaseDate = releaseDate,
-                    overview = overview,
-                    moviePosterPath =
-                    when (posterPath) {
-                        null -> ""
-                        else -> posterPath
-                    },
-                    movieBackdropPath =
-                    when (backdropPath) {
-                        null -> ""
-                        else -> backdropPath
-                    },
-                    popularity = popularity,
-                    voteAverage = voteAverage
-                )
-        }
+
+    override fun toEntity(): Movie =
+        Movie(
+            movieId = id,
+            title = title,
+            movieReleaseDate = releaseDate,
+            overview = overview,
+            moviePosterPath =
+            when (posterPath) {
+                null -> ""
+                else -> posterPath
+            },
+            movieBackdropPath =
+            when (backdropPath) {
+                null -> ""
+                else -> backdropPath
+            },
+            popularity = popularity,
+            movieVoteAverage = voteAverage,
+            movieVoteCount = voteCount
+        )
+
 }

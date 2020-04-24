@@ -9,4 +9,12 @@
     <string name="search">Search</string>
     <string name="sample_movie_title">Pulp Fiction</string>
     <string name="category_sample_text">Thrillers</string>
+    <string name="sample_release_year">2019</string>
+    <string name="no_rating">No Rating</string>
+    <string name="stream_on">Stream On</string>
+    <string name="overview">Overview</string>
+    <string name="sample_summary">Vincent Vega (John Travolta) and Jules Winnfield (Samuel L. Jackson) are hitmen with a penchant for philosophical discussions. In this ultra-hip, multi-strand crime movie, their storyline is interwoven with those of their boss, gangster Marsellus Wallace (Ving Rhames) ; his actress wife, Mia (Uma Thurman) ; struggling boxer Butch Coolidge (Bruce Willis) ; master fixer Winston Wolfe (Harvey Keitel) and a nervous pair of armed robbers,</string>
+    <string name="read_more">Read More</string>
+    <string name="not_available">Not Available</string>
+    <string name="sample_service_name">Google Play</string>
 </resources>
