@@ -69,15 +69,15 @@
                 </LinearLayout>
 
                 <TextView
-                    android:visibility="gone"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:textSize="16sp"
                     android:id="@+id/tv_not_yet_rated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/no_rating"
+                    android:textSize="16sp"
                     android:textStyle="italic"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/guideline_poster_bottom"
                     app:layout_constraintStart_toStartOf="@id/guideline_poster_end" />
 
@@ -94,7 +94,6 @@
                     app:layout_constraintStart_toStartOf="@id/guideline_poster_end" />
 
 
-
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline_poster_bottom"
                     android:layout_width="wrap_content"
@@ -109,16 +108,46 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_begin="143dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:id="@+id/rv_streaming_platforms"
-                    tools:orientation="horizontal"
-                    tools:listitem="@layout/list_item_streaming_platforms"
-                    app:layout_constraintTop_toBottomOf="@id/guideline_poster_bottom"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/guideline_poster_bottom">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/stream_on"
+                        android:textSize="28sp"
+                        app:layout_constraintTop_toBottomOf="@id/guideline_poster_bottom" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_streaming_platforms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        tools:listitem="@layout/list_item_streaming_platforms"
+                        tools:orientation="horizontal" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/overview"
+                        android:textSize="28sp" />
+                </LinearLayout>
+
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_poster_start"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="12dp" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

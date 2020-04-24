@@ -10,23 +10,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.domain.entities.StreamingLocation
-import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.list_item_streaming_platforms.view.*
 
 class StreamingServiceAdapter(
     private val streamLocationList: MutableList<StreamingLocation> = mutableListOf(),
-    private val onBadgeClick: (path: String) -> Unit
+    private val onBadgeClick: ((path: String) -> Unit)? = null
 ) : RecyclerView.Adapter<StreamingServiceAdapter.ServiceViewHolder>() {
 
     inner class ServiceViewHolder(view: View): RecyclerView.ViewHolder(view) {
+
         private val ivIcon: ImageView = view.findViewById(R.id.ivStreamingServiceIcon)
         private val tvServiceTitle: TextView = view.findViewById(R.id.tvStreamingServiceTitle)
         private val cvStreamingServiceBadge: CardView = view.findViewById(R.id.cvStreamingServiceBadge)
 
         fun bindTo(streamingLocation: StreamingLocation) {
-            Picasso.get().load(streamingLocation.iconPath).into(ivIcon)
+
             tvServiceTitle.text = streamingLocation.displayName
-            cvStreamingServiceBadge.setOnClickListener { onBadgeClick(streamingLocation.pathToMedia) }
+
+            Picasso.get().load(streamingLocation.iconPath).into(ivIcon)
+
+            onBadgeClick?.let {fn ->
+                cvStreamingServiceBadge.setOnClickListener { fn(streamingLocation.pathToMedia) }
+            }
+
         }
     }
 

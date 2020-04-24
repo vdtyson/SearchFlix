@@ -11,4 +11,6 @@
     <string name="category_sample_text">Thrillers</string>
     <string name="sample_release_year">2019</string>
     <string name="no_rating">No Rating</string>
+    <string name="stream_on">Stream On</string>
+    <string name="overview">Overview</string>
 </resources>
