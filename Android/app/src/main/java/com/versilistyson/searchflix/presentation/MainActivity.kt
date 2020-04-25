@@ -132,6 +132,7 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
     }
 
     private fun setupSearchView() {
+
         binding.searchView.setOnQueryTextListener(onQueryTextListener)
     }
 
