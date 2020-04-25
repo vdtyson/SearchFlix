@@ -35,4 +35,16 @@
             android:name="media"
             app:argType="com.versilistyson.searchflix.domain.entities.Media" />
     </fragment>
+    <fragment
+        android:id="@+id/mediaSearchFragment"
+        android:name="com.versilistyson.searchflix.MediaSearchFragment"
+        android:label="fragment_media_search"
+        tools:layout="@layout/fragment_media_search" >
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_mediaSearchFragment"
+        app:destination="@id/mediaSearchFragment" />
 </navigation>
