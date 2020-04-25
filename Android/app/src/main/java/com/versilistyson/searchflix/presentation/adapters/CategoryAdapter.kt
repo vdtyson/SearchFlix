@@ -22,12 +22,13 @@ class CategoryAdapter(
 ): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
 
-    inner class CategoryViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+    inner class CategoryViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
         private val title: TextView = view.findViewById(R.id.categoryTitle)
         private val innerRecyclerView: RecyclerView = view.findViewById(R.id.recyclerViewMedia)
         private val progressBarCategory: ProgressBar = view.findViewById(R.id.progressBarCategory)
         private val tvCategoryContentNotAvailable: TextView = view.findViewById(R.id.tvCategoryContentNotAvailable)
+
         private val mediaAdapter = MediaAdapter(lifecycleOwner, onMediaItemClick)
 
         init {
@@ -40,9 +41,9 @@ class CategoryAdapter(
 
         fun bindTo(category: Category) {
 
-            render(category)
-
             innerRecyclerView.adapter = mediaAdapter
+
+            render(category)
 
             title.text = category.title
 
