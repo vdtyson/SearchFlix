@@ -10,24 +10,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
+import com.versilistyson.searchflix.data.util.NetworkConstants
 import com.versilistyson.searchflix.domain.entities.Media
 
-class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener?): PagedListAdapter<Media.Movie,MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
+class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener? = null): PagedListAdapter<Media.Movie,MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
 
     inner class MediaViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        private var mediaTitle = view.findViewById<TextView>(R.id.textViewMediaTitle)
-        private var mediaPoster = view.findViewById<ImageView>(R.id.imageViewMediaPoster)
+        private val ivSearchPoster: ImageView = view.findViewById(R.id.ivSearchPoster)
+
         init {
             onMediaClickListener?.let { listener ->
-                view.setOnClickListener { listener }
+                view.setOnClickListener(listener)
             }
         }
 
-        fun bindTo(mediaItem: Media.Movie?) {
-            mediaItem?.let {
-                Picasso.get().load(mediaItem.posterPath).into(mediaPoster)
-                mediaTitle.text = mediaItem.name
-            }
+        fun bindTo(mediaItem: Media.Movie) {
+            if(mediaItem.posterPath.isNotBlank()) Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + mediaItem.posterPath).into(ivSearchPoster)
         }
     }
 
@@ -35,13 +33,15 @@ class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener?)
         parent: ViewGroup,
         viewType: Int
     ): MediaPagedAdapter.MediaViewHolder {
-        val inflatedLayount = LayoutInflater.from(parent.context).inflate(R.layout.list_item_media,parent,false)
+        val inflatedLayount = LayoutInflater.from(parent.context).inflate(R.layout.list_item_search,parent,false)
         return MediaViewHolder(inflatedLayount)
     }
 
     override fun onBindViewHolder(holder: MediaPagedAdapter.MediaViewHolder, position: Int) {
         val mediaItem = getItem(position)
-        holder.bindTo(mediaItem)
+        mediaItem?.let {
+            holder.bindTo(it)
+        }
     }
 
     companion object {

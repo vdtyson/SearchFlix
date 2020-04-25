@@ -46,11 +46,11 @@ class MovieRepository
         }
     }
 
-    private fun queryMovies(
+    fun queryMovies(
         query: String,
         isAdultIncluded: Boolean,
         language: String,
-        pagedListConfig: PagedList.Config
+        pageSize: Int
     ): LiveData<PagedList<Media.Movie>> {
         val factory =
             MovieQueryPagedDataSourceFactory(query, isAdultIncluded, language) { page ->
@@ -59,7 +59,7 @@ class MovieRepository
                 movieDtoList.map { it.mapToEntity() }
             }
 
-        val livePageBuilder = LivePagedListBuilder(factory, pagedListConfig)
+        val livePageBuilder = LivePagedListBuilder(factory, pageSize)
 
         return livePageBuilder.build()
     }

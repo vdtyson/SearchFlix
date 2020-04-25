@@ -75,6 +75,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-moshi:2.8.1'
     // UI Stuff
+    // Card Swipe
+    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
     // Material Search View
     implementation 'br.com.mauker.materialsearchview:materialsearchview:1.2.3'
     // Android X Card View

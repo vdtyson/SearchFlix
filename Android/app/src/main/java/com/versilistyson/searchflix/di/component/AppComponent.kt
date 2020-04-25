@@ -7,6 +7,7 @@ import com.versilistyson.searchflix.di.module.*
 import com.versilistyson.searchflix.presentation.MainActivity
 import com.versilistyson.searchflix.presentation.dashboard.DashboardFragment
 import com.versilistyson.searchflix.presentation.details.MediaDetailsFragment
+import com.versilistyson.searchflix.presentation.search.MediaSearchFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -32,4 +33,5 @@ interface AppComponent {
     fun inject(target: MediaDetailsFragment)
     fun inject(target: MainActivity)
     fun inject(target: DashboardFragment)
+    fun inject(target: MediaSearchFragment)
 }
