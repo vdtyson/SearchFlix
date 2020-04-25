@@ -1,5 +1,6 @@
 package com.versilistyson.searchflix.data.repository
 
+import com.versilistyson.searchflix.data.datasource.search.MovieQueryPagedDataSourceFactory
 import com.versilistyson.searchflix.data.datasource.search.MovieRemoteSource
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.exception.Failure
@@ -43,11 +44,12 @@ class MovieRepository
 
     private suspend fun queryMovies(
         query: String,
-        page: Int,
-        language: String,
-        isAdultIncluded: Boolean
-    ): Either<Failure, MoviePagedResponse> {
-        TODO()
+        isAdultIncluded: Boolean,
+        language: String
+    ) {
+        val factory = MovieQueryPagedDataSourceFactory(query, isAdultIncluded, language) { page ->
+            movieRemoteSource.fetchMovieQueryResults(query, isAdultIncluded, language, page)
+        }
     }
 
 }

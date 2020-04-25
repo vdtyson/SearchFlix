@@ -27,4 +27,10 @@ class MovieRemoteSource
         val response = movieApi.fetchUpcomingMovies(language)
         return response.getResult()
     }
+
+    fun fetchMovieQueryResults(query: String, isAdultIncluded: Boolean, language: String, page: Int) =
+        movieApi.fetchMovieQueryResults(query, isAdultIncluded, language,page)
+
+
+
 }

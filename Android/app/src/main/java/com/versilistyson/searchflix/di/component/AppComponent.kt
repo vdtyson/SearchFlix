@@ -2,6 +2,7 @@ package com.versilistyson.searchflix.di.component
 
 import android.app.Application
 import com.versilistyson.searchflix.data.datasource.search.MovieQueryPagedDataSource
+import com.versilistyson.searchflix.data.datasource.search.MovieQueryPagedDataSourceFactory
 import com.versilistyson.searchflix.di.module.*
 import com.versilistyson.searchflix.presentation.MainActivity
 import com.versilistyson.searchflix.presentation.dashboard.DashboardFragment
@@ -27,7 +28,6 @@ interface AppComponent {
         fun create(@BindsInstance application: Application): AppComponent
     }
 
-    val movieQueryPagedDataSourceFactory: MovieQueryPagedDataSource.Factory
 
     fun inject(target: MediaDetailsFragment)
     fun inject(target: MainActivity)
