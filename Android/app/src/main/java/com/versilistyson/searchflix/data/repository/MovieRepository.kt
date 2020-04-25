@@ -1,13 +1,17 @@
 package com.versilistyson.searchflix.data.repository
 
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.versilistyson.searchflix.data.datasource.search.MovieQueryPagedDataSourceFactory
 import com.versilistyson.searchflix.data.datasource.search.MovieRemoteSource
-import com.versilistyson.searchflix.domain.common.Either
-import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.data.util.handleFailure
 import com.versilistyson.searchflix.data.util.handleNetworkResult
+import com.versilistyson.searchflix.domain.common.Either
+import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.domain.entities.MediaPagedResponse.MoviePagedResponse
 import com.versilistyson.searchflix.domain.entities.MediaSingleResponse.MovieSingleResponse
+import com.versilistyson.searchflix.domain.exception.Failure
 import javax.inject.Inject
 
 class MovieRepository
@@ -42,14 +46,25 @@ class MovieRepository
         }
     }
 
-    private suspend fun queryMovies(
+    private fun queryMovies(
         query: String,
         isAdultIncluded: Boolean,
-        language: String
-    ) {
-        val factory = MovieQueryPagedDataSourceFactory(query, isAdultIncluded, language) { page ->
-            movieRemoteSource.fetchMovieQueryResults(query, isAdultIncluded, language, page)
-        }
+        language: String,
+        pagedListConfig: PagedList.Config
+    ): LiveData<PagedList<Media.Movie>> {
+        val factory =
+            MovieQueryPagedDataSourceFactory(query, isAdultIncluded, language) { page ->
+                movieRemoteSource.fetchMovieQueryResults(query, isAdultIncluded, language, page)
+            }.mapByPage { movieDtoList ->
+                movieDtoList.map { it.mapToEntity() }
+            }
+
+        val livePageBuilder = LivePagedListBuilder(factory, pagedListConfig)
+
+        return livePageBuilder.build()
     }
 
+
+
 }
+
