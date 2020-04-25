@@ -41,7 +41,7 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
                 if (!query.isNullOrBlank()) {
 
                     val toMediaSearchFragment = NavGraphMainDirections.actionGlobalMediaSearchFragment(query)
-
+                    binding.toolbar.title = "Search Result for: $query"
                     navController.navigate(toMediaSearchFragment)
 
                 }
