@@ -37,12 +37,15 @@
     </fragment>
     <fragment
         android:id="@+id/mediaSearchFragment"
-        android:name="com.versilistyson.searchflix.MediaSearchFragment"
+        android:name="com.versilistyson.searchflix.presentation.search.MediaSearchFragment"
         android:label="fragment_media_search"
         tools:layout="@layout/fragment_media_search" >
         <argument
             android:name="query"
             app:argType="string" />
+        <argument
+            android:name="mediaType"
+            app:argType="com.versilistyson.searchflix.domain.entities.MediaType" />
     </fragment>
     <action
         android:id="@+id/action_global_mediaSearchFragment"

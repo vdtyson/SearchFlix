@@ -1,10 +1,11 @@
-package com.versilistyson.searchflix
+package com.versilistyson.searchflix.presentation.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.versilistyson.searchflix.R
 
 /**
  * A simple [Fragment] subclass.

@@ -10,12 +10,12 @@ import retrofit2.http.Query
 interface MovieApi {
 
     @GET("search/movie")
-    suspend fun fetchMoviesFromQuery(
+    suspend fun fetchMovieQueryResults(
         @Query("query") query: String,
         @Query("adult") isAdultIncluded: Boolean,
         @Query("page") page: Int,
         @Query("language") language: String
-    ) : Response<List<MovieDto>>
+    ) : Response<MoviePagedResponseDto>
 
     @GET("movie/popular")
     suspend fun fetchPopularMovies(
