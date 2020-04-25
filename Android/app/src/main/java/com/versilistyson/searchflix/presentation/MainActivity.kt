@@ -39,9 +39,8 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 if (!query.isNullOrBlank()) {
-                    val toMediaSearchFragment = NavGraphMainDirections.actionGlobalMediaSearchFragment(query)
 
-                    binding.searchView.closeSearch()
+                    val toMediaSearchFragment = NavGraphMainDirections.actionGlobalMediaSearchFragment(query)
 
                     navController.navigate(toMediaSearchFragment)
 

@@ -41,14 +41,14 @@ class CategoryAdapter(
 
         fun bindTo(category: Category) {
 
+            category.fetchMedia()
+
             innerRecyclerView.adapter = mediaAdapter
 
             render(category)
 
             title.text = category.title
 
-
-            category.fetchMedia()
         }
 
         private fun render(category: Category) {
