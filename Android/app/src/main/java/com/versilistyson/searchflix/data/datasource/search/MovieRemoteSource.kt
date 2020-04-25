@@ -12,15 +12,6 @@ import javax.inject.Inject
 
 class MovieRemoteSource
 @Inject constructor(private val movieApi: MovieApi) {
-    suspend fun searchMovies(
-        query: String,
-        page: Int,
-        language: String,
-        isAdultIncluded: Boolean
-    ): Either<Failure, NetworkResult<List<MovieDto>>> {
-        val response = movieApi.fetchMovieQueryResults(query, isAdultIncluded, page, language)
-        TODO()
-    }
 
     suspend fun fetchPopularMovies(language: String, page: Int): Either<Failure, NetworkResult<MoviePagedResponseDto>> {
         val response = movieApi.fetchPopularMovies(language,page)

@@ -1,10 +1,8 @@
 package com.versilistyson.searchflix.di.component
 
 import android.app.Application
-import com.versilistyson.searchflix.di.module.AppModule
-import com.versilistyson.searchflix.di.module.ViewModelModule
-import com.versilistyson.searchflix.di.module.NetworkingModule
-import com.versilistyson.searchflix.di.module.ServiceModule
+import com.versilistyson.searchflix.data.datasource.search.MovieQueryPagedDataSource
+import com.versilistyson.searchflix.di.module.*
 import com.versilistyson.searchflix.presentation.MainActivity
 import com.versilistyson.searchflix.presentation.dashboard.DashboardFragment
 import com.versilistyson.searchflix.presentation.details.MediaDetailsFragment
@@ -18,15 +16,18 @@ import javax.inject.Singleton
         AppModule::class,
         ViewModelModule::class,
         NetworkingModule::class,
-        ServiceModule::class
+        ServiceModule::class,
+        AssistedInjectModule::class
     ]
 )
 interface AppComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance application: Application) : AppComponent
+        fun create(@BindsInstance application: Application): AppComponent
     }
+
+    val movieQueryPagedDataSourceFactory: MovieQueryPagedDataSource.Factory
 
     fun inject(target: MediaDetailsFragment)
     fun inject(target: MainActivity)

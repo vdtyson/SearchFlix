@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.versilistyson.searchflix.domain.common.Mappable
 import com.versilistyson.searchflix.domain.entities.MediaPagedResponse.*
 
-data class MoviePagedResponseDto(
+data class MoviePagedResponseDto (
     @Json(name = "page")
     val currentPage: Int,
     @Json(name = "total_results")

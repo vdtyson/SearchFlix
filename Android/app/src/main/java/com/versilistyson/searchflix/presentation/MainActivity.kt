@@ -19,6 +19,7 @@ import com.versilistyson.searchflix.databinding.ActivityMainBinding
 import com.versilistyson.searchflix.domain.entities.MediaType
 import com.versilistyson.searchflix.presentation.common.activity.BaseActivity
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.util.clearMenu
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
@@ -105,7 +106,7 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
     }
 
     private fun setupToolBar() {
-
+        binding.toolbar.menu.clearMenu()
         binding.toolbar.inflateMenu(R.menu.menu_toolbar_dashboard)
 
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
