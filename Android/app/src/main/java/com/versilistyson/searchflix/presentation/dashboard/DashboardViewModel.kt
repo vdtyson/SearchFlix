@@ -5,9 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.versilistyson.searchflix.data.repository.MovieRepository
-import com.versilistyson.searchflix.domain.entities.Media
-import com.versilistyson.searchflix.domain.exception.Failure
-import com.versilistyson.searchflix.presentation.common.UIStateComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -98,7 +95,7 @@ class DashboardViewModel
 
     private fun updateState(
         default: DashboardState,
-        doWhenStateNotNull: (currentState: DashboardState) -> DashboardState
+        whenStateNotNull: (currentState: DashboardState) -> DashboardState
     ) {
         when (currentState) {
             null -> {
@@ -106,7 +103,7 @@ class DashboardViewModel
                 _dashboardState.postValue(default)
             }
             else -> {
-                currentState = doWhenStateNotNull(currentState!!)
+                currentState = whenStateNotNull(currentState!!)
                 _dashboardState.postValue(currentState)
 
             }

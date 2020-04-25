@@ -67,7 +67,6 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
     }
 
 
-
     private fun renderState() {
         viewModel.dashboardState.observe(
             viewLifecycleOwner,
@@ -79,13 +78,8 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         )
     }
 
-    private fun Category.onStateChanged(state: MediaListStateComponent) {
-        when(state) {
-            is MediaListStateComponent.Loading -> Toast.makeText(context, "${topRatedMoviesCategory.title} is loading", Toast.LENGTH_SHORT).show()
-            is MediaListStateComponent.Error -> Toast.makeText(context, "${this.title} failure: ${state.failure}", Toast.LENGTH_LONG).show()
-            is MediaListStateComponent.Data -> this.updateMediaList(state.value)
-        }
-    }
+    private fun Category.onStateChanged(state: MediaListStateComponent) =
+        updateMediaListState(state)
 
     private fun setFetchersForCategories() {
         upcomingMoviesCategory.fetcherFn = { viewModel.getUpcomingMovies() }
