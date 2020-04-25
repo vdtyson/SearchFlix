@@ -3,7 +3,6 @@ package com.versilistyson.searchflix.presentation
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -12,6 +11,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.versilistyson.searchflix.NavGraphMainDirections
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.ActivityMainBinding
 import com.versilistyson.searchflix.presentation.common.activity.BaseActivity
@@ -37,7 +37,16 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
     private val onQueryTextListener: MaterialSearchView.OnQueryTextListener =
         object : MaterialSearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // TODO: Not yet implemented
+
+                if (!query.isNullOrBlank()) {
+                    val toMediaSearchFragment = NavGraphMainDirections.actionGlobalMediaSearchFragment(query)
+
+                    binding.searchView.closeSearch()
+
+                    navController.navigate(toMediaSearchFragment)
+
+                }
+
                 return true
             }
 
@@ -84,13 +93,14 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
     private fun setupOnDestinationChangedListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when(destination.id) {
+            when (destination.id) {
                 R.id.dashboardFragment -> {
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, true)
                 }
 
                 else -> {
-                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_search,false)
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, false)
+                    binding.searchView.closeSearch()
                 }
             }
         }
