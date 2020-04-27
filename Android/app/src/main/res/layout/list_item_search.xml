@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:text="@string/sample_movie_title"
                     android:textSize="14sp"
                     android:textStyle="bold"

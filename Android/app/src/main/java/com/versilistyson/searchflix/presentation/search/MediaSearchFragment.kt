@@ -35,9 +35,6 @@ class MediaSearchFragment : Fragment() {
     private val args: MediaSearchFragmentArgs by navArgs()
 
     lateinit var adapter: MediaPagedAdapter
-    private val layoutManager by lazy {
-        GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityInjector.inject(this)
@@ -73,7 +70,7 @@ class MediaSearchFragment : Fragment() {
     private fun setupRV() {
         initAdapter()
         binding.cardStackView.adapter = adapter
-        binding.cardStackView.layoutManager = layoutManager
+        binding.cardStackView.layoutManager = provideLayoutManager()
     }
 
     private fun onMediaItemClick(media: Media) {
@@ -84,4 +81,7 @@ class MediaSearchFragment : Fragment() {
     private fun initAdapter() {
         adapter = MediaPagedAdapter(::onMediaItemClick)
     }
+
+    private fun provideLayoutManager() =
+        GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 }

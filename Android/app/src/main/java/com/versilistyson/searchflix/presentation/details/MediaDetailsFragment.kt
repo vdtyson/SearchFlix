@@ -66,6 +66,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getAvailableStreamingPlatforms(args.media.id)
         setupRecyclerView()
         renderReleaseDate()
         renderSummary()
