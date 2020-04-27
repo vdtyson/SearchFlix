@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,19 +12,19 @@ import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.data.util.NetworkConstants
 import com.versilistyson.searchflix.domain.entities.Media
 
-class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener? = null): PagedListAdapter<Media.Movie,MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
+class MediaPagedAdapter(private val onMediaClick: ((media: Media) -> Unit)? = null) :
+    PagedListAdapter<Media.Movie, MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
 
-    inner class MediaViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class MediaViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val ivSearchPoster: ImageView = view.findViewById(R.id.ivSearchPoster)
 
-        init {
-            onMediaClickListener?.let { listener ->
-                view.setOnClickListener(listener)
-            }
-        }
-
         fun bindTo(mediaItem: Media.Movie) {
-            if(mediaItem.posterPath.isNotBlank()) Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + mediaItem.posterPath).into(ivSearchPoster)
+            if (mediaItem.posterPath.isNotBlank()) Picasso.get()
+                .load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + mediaItem.posterPath)
+                .into(ivSearchPoster)
+
+            onMediaClick?.let { fn -> view.setOnClickListener { fn(mediaItem) } }
+
         }
     }
 
@@ -33,7 +32,8 @@ class MediaPagedAdapter(private val onMediaClickListener: View.OnClickListener? 
         parent: ViewGroup,
         viewType: Int
     ): MediaPagedAdapter.MediaViewHolder {
-        val inflatedLayount = LayoutInflater.from(parent.context).inflate(R.layout.list_item_search,parent,false)
+        val inflatedLayount =
+            LayoutInflater.from(parent.context).inflate(R.layout.list_item_search, parent, false)
         return MediaViewHolder(inflatedLayount)
     }
 

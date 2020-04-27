@@ -46,6 +46,9 @@
         <argument
             android:name="mediaType"
             app:argType="com.versilistyson.searchflix.domain.entities.MediaType" />
+        <action
+            android:id="@+id/action_mediaSearchFragment_to_mediaDetailsFragment"
+            app:destination="@id/mediaDetailsFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_mediaSearchFragment"

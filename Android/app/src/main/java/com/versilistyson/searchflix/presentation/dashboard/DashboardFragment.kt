@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.versilistyson.searchflix.R
@@ -19,6 +20,7 @@ import com.versilistyson.searchflix.domain.entities.Category
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.CategoryAdapter
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -82,9 +84,16 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         updateMediaListState(state)
 
     private fun setFetchersForCategories() {
-        upcomingMoviesCategory.fetcherFn = { viewModel.getUpcomingMovies() }
-        popularMoviesCategory.fetcherFn = { viewModel.getPopularMovies() }
-        topRatedMoviesCategory.fetcherFn = { viewModel.getTopRatedMovies() }
+        upcomingMoviesCategory.fetcherFn = {
+                viewModel.getUpcomingMovies()
+        }
+        popularMoviesCategory.fetcherFn = {
+                viewModel.getPopularMovies()
+        }
+
+        topRatedMoviesCategory.fetcherFn = {
+            viewModel.getTopRatedMovies()
+        }
     }
 
     private fun setupRecyclerView() {
