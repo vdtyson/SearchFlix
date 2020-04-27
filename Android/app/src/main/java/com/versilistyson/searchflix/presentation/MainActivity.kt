@@ -1,9 +1,6 @@
 package com.versilistyson.searchflix.presentation
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
@@ -20,7 +17,6 @@ import com.versilistyson.searchflix.domain.entities.MediaType
 import com.versilistyson.searchflix.presentation.common.activity.BaseActivity
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
 import com.versilistyson.searchflix.presentation.util.clearMenu
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
@@ -41,9 +37,12 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         object : MaterialSearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
-                if(!query.isNullOrBlank()) {
+                if (!query.isNullOrBlank()) {
                     val toSearchFragment =
-                        NavGraphMainDirections.actionGlobalMediaSearchFragment(query, MediaType.MOVIE)
+                        NavGraphMainDirections.actionGlobalMediaSearchFragment(
+                            query,
+                            MediaType.MOVIE
+                        )
 
                     navController.navigate(toSearchFragment)
                 }
@@ -83,10 +82,18 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.dashboardFragment -> {
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_favorite, false)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, true)
                 }
 
+                R.id.mediaDetailsFragment -> {
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, false)
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_favorite, true)
+                    if (binding.searchView.isOpen) binding.searchView.closeSearch()
+                }
+
                 else -> {
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_favorite, false)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, false)
                     if(binding.searchView.isOpen) binding.searchView.closeSearch()
                 }
@@ -113,7 +120,7 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
         binding.toolbar.setOnMenuItemClickListener(
             Toolbar.OnMenuItemClickListener { item ->
-                when(item.itemId) {
+                when (item.itemId) {
                     R.id.menu_item_search -> {
                         binding.searchView.openSearch()
                     }
