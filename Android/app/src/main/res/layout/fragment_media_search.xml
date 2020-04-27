@@ -8,15 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.yuyakaido.android.cardstackview.CardStackView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/card_stack_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@id/rv_bottom_guideline"
-            app:layout_constraintEnd_toEndOf="@id/rv_end_guideline"
-            app:layout_constraintStart_toStartOf="@id/rv_start_guideline"
-            app:layout_constraintTop_toTopOf="@id/rv_top_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/list_item_search" />
 
         <androidx.constraintlayout.widget.Guideline

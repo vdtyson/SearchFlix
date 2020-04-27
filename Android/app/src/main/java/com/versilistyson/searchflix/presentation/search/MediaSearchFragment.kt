@@ -10,16 +10,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.FragmentMediaSearchBinding
 import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
 import com.versilistyson.searchflix.di.util.activityInjector
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.MediaPagedAdapter
-import com.versilistyson.searchflix.presentation.util.CardStackLayoutManagerFactory
-import com.yuyakaido.android.cardstackview.CardStackLayoutManager
-import com.yuyakaido.android.cardstackview.StackFrom
-import com.yuyakaido.android.cardstackview.SwipeableMethod
 import javax.inject.Inject
 
 /**
@@ -35,10 +32,12 @@ class MediaSearchFragment : Fragment() {
 
     lateinit var binding: FragmentMediaSearchBinding
 
-    val args: MediaSearchFragmentArgs by navArgs()
+    private val args: MediaSearchFragmentArgs by navArgs()
 
     lateinit var adapter: MediaPagedAdapter
-    lateinit var cardStackLayoutManager: CardStackLayoutManager
+    private val layoutManager by lazy {
+        GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityInjector.inject(this)
@@ -56,42 +55,33 @@ class MediaSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cardStackLayoutManager = provideCardStackLayoutManager()
-        adapter = provideAdapter()
-        adapter.submitList(null)
-
         setupRV()
+        render()
+    }
 
+    private fun render() {
         viewModel.queryMovies(args.query).observe(
             viewLifecycleOwner,
             Observer {
+                adapter.submitList(null)
+                adapter.notifyDataSetChanged()
                 adapter.submitList(it)
             }
         )
     }
 
     private fun setupRV() {
+        initAdapter()
         binding.cardStackView.adapter = adapter
-        binding.cardStackView.layoutManager = cardStackLayoutManager
+        binding.cardStackView.layoutManager = layoutManager
     }
 
     private fun onMediaItemClick(media: Media) {
-        val toMediaDetailsFragment = MediaSearchFragmentDirections.actionMediaSearchFragmentToMediaDetailsFragment(media)
+        val toMediaDetailsFragment = MediaSearchFragmentDirections.actionMediaSearchFragmentToMediaDetailsFragment(media, media.name)
         findNavController().navigate(toMediaDetailsFragment)
     }
 
-    private fun provideAdapter() =
-        MediaPagedAdapter(::onMediaItemClick)
-
-    private fun provideCardStackLayoutManager() =
-        CardStackLayoutManagerFactory.create(
-            context = context,
-            stackFrom = StackFrom.TopAndRight,
-            visibleCount = 3,
-            canScrollVertical = false,
-            canScrollHorizontal = true,
-            swipeableMethod = SwipeableMethod.Manual
-        )
-
-
+    private fun initAdapter() {
+        adapter = MediaPagedAdapter(::onMediaItemClick)
+    }
 }

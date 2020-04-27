@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +19,16 @@ class MediaPagedAdapter(private val onMediaItemClick: ((media: Media) -> Unit)? 
 
     inner class MediaViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val ivSearchPoster: ImageView = view.findViewById(R.id.ivSearchPoster)
+        private val ratingsBar: RatingBar = view.findViewById(R.id.ratingsBarSearch)
+        private val tvMediaReleaseYear: TextView = view.findViewById(R.id.tvSearchResultMediaReleaseYear)
+        private val tvMediaTitle: TextView = view.findViewById(R.id.tvSearchResultMediaTitle)
 
         fun bindTo(mediaItem: Media.Movie) {
+
+            ratingsBar.rating = (mediaItem.movieVoteAverage.toFloat()) / 2
+            tvMediaReleaseYear.text = mediaItem.movieReleaseDate
+            tvMediaTitle.text = mediaItem.title
+
             if (mediaItem.posterPath.isNotBlank()) Picasso.get()
                 .load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + mediaItem.posterPath)
                 .into(ivSearchPoster)

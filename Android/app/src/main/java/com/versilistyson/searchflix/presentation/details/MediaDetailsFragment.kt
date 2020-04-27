@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
@@ -65,7 +66,6 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getAvailableStreamingPlatforms(args.media.id)
         setupRecyclerView()
         renderReleaseDate()
         renderSummary()
@@ -77,6 +77,10 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             .into(binding.ivPoster)
         Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + args.media.backdropPath)
             .into(binding.ivBackDrop)
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     private fun setupRecyclerView() {
@@ -135,11 +139,11 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             }
 
             else -> {
-
+                val rating = (args.media.voteAverage.toFloat()) / 2
                 binding.tvNotYetRated.visibility = View.GONE
                 binding.ratingBar.visibility = View.VISIBLE
 
-                binding.ratingBar.rating = args.media.voteAverage.toFloat()
+                binding.ratingBar.rating = rating
             }
         }
     }

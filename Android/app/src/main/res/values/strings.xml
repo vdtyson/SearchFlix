@@ -18,4 +18,6 @@
     <string name="not_available">Not Available</string>
     <string name="sample_service_name">Google Play</string>
     <string name="content_not_found">Content not found</string>
+    <string name="sample_movie_year">1994</string>
+    <string name="reviews">Reviews: </string>
 </resources>
