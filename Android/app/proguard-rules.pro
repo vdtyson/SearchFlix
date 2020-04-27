@@ -19,5 +19,5 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class br.com.mauker.MsvAuthority
+-keep class com.versilistyson.searchflix.presentation.util.MsvAuthority
 -keepclassmembers class br.com.mauker.** { *; }

@@ -12,7 +12,7 @@ import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.data.util.NetworkConstants
 import com.versilistyson.searchflix.domain.entities.Media
 
-class MediaPagedAdapter(private val onMediaClick: ((media: Media) -> Unit)? = null) :
+class MediaPagedAdapter(private val onMediaItemClick: ((media: Media) -> Unit)? = null) :
     PagedListAdapter<Media.Movie, MediaPagedAdapter.MediaViewHolder>(DIFF_CALLBACK) {
 
     inner class MediaViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -23,7 +23,7 @@ class MediaPagedAdapter(private val onMediaClick: ((media: Media) -> Unit)? = nu
                 .load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + mediaItem.posterPath)
                 .into(ivSearchPoster)
 
-            onMediaClick?.let { fn -> view.setOnClickListener { fn(mediaItem) } }
+            onMediaItemClick?.let { fn -> view.setOnClickListener { fn(mediaItem) } }
 
         }
     }

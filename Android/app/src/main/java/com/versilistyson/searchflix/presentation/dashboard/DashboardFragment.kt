@@ -104,15 +104,15 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
         categoryAdapter = CategoryAdapter(
             viewLifecycleOwner,
             categoryList,
-            onCategoryTitleClickListener
-        ) { media ->
-            onMediaItemClick(media)
-        }
+            onCategoryTitleClickListener,
+            ::onMediaItemClick
+        )
 
         binding.categoryRecyclerView.layoutManager = linearLayoutManager
         binding.categoryRecyclerView.adapter = categoryAdapter
     }
 
+    // TODO: On click, add a page that goes to a paged fragment that goes to a full paged list screen.
     private val onCategoryTitleClickListener =
         View.OnClickListener {
             Toast.makeText(this.context, "Title Clicked", Toast.LENGTH_SHORT).show()

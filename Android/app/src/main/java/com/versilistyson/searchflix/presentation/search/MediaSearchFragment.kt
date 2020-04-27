@@ -75,13 +75,13 @@ class MediaSearchFragment : Fragment() {
         binding.cardStackView.layoutManager = cardStackLayoutManager
     }
 
-    private fun onMediaClicked(media: Media) {
+    private fun onMediaItemClick(media: Media) {
         val toMediaDetailsFragment = MediaSearchFragmentDirections.actionMediaSearchFragmentToMediaDetailsFragment(media)
         findNavController().navigate(toMediaDetailsFragment)
     }
 
     private fun provideAdapter() =
-        MediaPagedAdapter(::onMediaClicked)
+        MediaPagedAdapter(::onMediaItemClick)
 
     private fun provideCardStackLayoutManager() =
         CardStackLayoutManagerFactory.create(
