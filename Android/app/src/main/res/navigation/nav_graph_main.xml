@@ -29,10 +29,31 @@
     <fragment
         android:id="@+id/mediaDetailsFragment"
         android:name="com.versilistyson.searchflix.presentation.details.MediaDetailsFragment"
-        android:label="fragment_media_details"
+        android:label="{title}"
         tools:layout="@layout/fragment_media_details" >
         <argument
             android:name="media"
             app:argType="com.versilistyson.searchflix.domain.entities.Media" />
+        <argument
+            android:name="title"
+            app:argType="string"/>
     </fragment>
+    <fragment
+        android:id="@+id/mediaSearchFragment"
+        android:name="com.versilistyson.searchflix.presentation.search.MediaSearchFragment"
+        android:label="Search results for '{query}'"
+        tools:layout="@layout/fragment_media_search" >
+        <argument
+            android:name="query"
+            app:argType="string" />
+        <argument
+            android:name="mediaType"
+            app:argType="com.versilistyson.searchflix.domain.entities.MediaType" />
+        <action
+            android:id="@+id/action_mediaSearchFragment_to_mediaDetailsFragment"
+            app:destination="@id/mediaDetailsFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_mediaSearchFragment"
+        app:destination="@id/mediaSearchFragment" />
 </navigation>

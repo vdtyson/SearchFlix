@@ -75,8 +75,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-moshi:2.8.1'
     // UI Stuff
-    implementation 'com.github.arimorty:floatingsearchview:2.1.1'
+    // Card Swipe
+    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+    // Material Search View
+    implementation 'br.com.mauker.materialsearchview:materialsearchview:1.2.3'
+    // Android X Card View
     implementation 'androidx.cardview:cardview:1.0.0'
+    // Material UI
     implementation 'com.google.android.material:material:1.2.0-alpha06'
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
@@ -97,6 +102,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     // Paging Library
     implementation "androidx.paging:paging-runtime:2.1.2"
-    // Circle Image View
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    // Room
+    def room_version = "2.2.5"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
 }

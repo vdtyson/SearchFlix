@@ -3,12 +3,10 @@ package com.versilistyson.searchflix.presentation.details
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import androidx.core.app.ActivityCompat
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,6 +20,7 @@ import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
 import com.versilistyson.searchflix.di.util.activityInjector
 import com.versilistyson.searchflix.presentation.adapters.StreamingServiceAdapter
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -75,11 +74,22 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         renderRatings()
         renderState()
 
+        requireActivity().toolbar.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.menu_item_favorite) {
+                Toast.makeText(context, "Favorites Clicked!", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+
         binding.tvTitle.text = args.media.name
         Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + args.media.posterPath)
             .into(binding.ivPoster)
         Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + args.media.backdropPath)
             .into(binding.ivBackDrop)
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     private fun setupRecyclerView() {
@@ -92,16 +102,16 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { latestState ->
-                when (val streamingPlatformState = latestState.streamingPlaformState) {
+                when (val streamListsState = latestState.streamsListStateComponent) {
 
-                    MediaDetailsState.StreamingPlaformState.Loading -> {
+                    StreamsListStateComponent.Loading -> {
                         binding.progressBarStreamingServices.visibility = View.VISIBLE
                         binding.tvNotAvailable.visibility = View.GONE
                         binding.rvStreamingPlatforms.visibility = View.GONE
                     }
 
-                    is MediaDetailsState.StreamingPlaformState.Loaded -> {
-                        adapter.addAll(streamingPlatformState.availableStreamingLocations)
+                    is StreamsListStateComponent.Loaded -> {
+                        adapter.addAll(streamListsState.availableStreamingLocations)
                         when {
 
                             adapter.isEmpty() -> {
@@ -138,11 +148,11 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             }
 
             else -> {
-
+                val rating = (args.media.voteAverage.toFloat()) / 2
                 binding.tvNotYetRated.visibility = View.GONE
                 binding.ratingBar.visibility = View.VISIBLE
 
-                binding.ratingBar.rating = args.media.voteAverage.toFloat()
+                binding.ratingBar.rating = rating
             }
         }
     }

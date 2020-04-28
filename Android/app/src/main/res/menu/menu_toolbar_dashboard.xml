@@ -2,9 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_item_search"
+        android:icon="@drawable/ic_toolbar_search"
         android:title="@string/search"
-        app:showAsAction="always"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        android:id="@+id/menuBttn_search"
-        android:icon="@drawable/ic_toolbar_search"/>
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_item_favorite"
+        android:icon="@drawable/ic_favorite_border_black_24dp"
+        android:title="Favorite"
+        app:showAsAction="ifRoom"/>
 </menu>

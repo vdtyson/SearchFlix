@@ -3,6 +3,7 @@ package com.versilistyson.searchflix.data.remote.api
 import com.versilistyson.searchflix.data.remote.dto.MovieDto
 import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
 import com.versilistyson.searchflix.data.remote.dto.MovieSingleResponseDto
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -10,12 +11,12 @@ import retrofit2.http.Query
 interface MovieApi {
 
     @GET("search/movie")
-    suspend fun fetchMoviesFromQuery(
+    fun fetchMovieQueryResults(
         @Query("query") query: String,
         @Query("adult") isAdultIncluded: Boolean,
-        @Query("page") page: Int,
-        @Query("language") language: String
-    ) : Response<List<MovieDto>>
+        @Query("language") language: String,
+        @Query("page") page: Int
+    ) : Call<MoviePagedResponseDto>
 
     @GET("movie/popular")
     suspend fun fetchPopularMovies(

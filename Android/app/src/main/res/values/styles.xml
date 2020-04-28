@@ -15,4 +15,15 @@
         <item name="colorOnError">@color/colorOnError</item>
     </style>
 
+    <style name="SearchViewStyle">
+        <item name="searchVoiceIcon">@drawable/ic_search_voice</item>
+    </style>
+
+    <style name="SearchViewStyle.Light">
+
+    </style>
+
+    <style name="SearchViewStyle.Dark">
+
+    </style>
 </resources>

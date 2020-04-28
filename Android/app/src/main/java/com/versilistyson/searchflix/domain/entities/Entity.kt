@@ -1,6 +1,8 @@
 package com.versilistyson.searchflix.domain.entities
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.versilistyson.searchflix.presentation.dashboard.MediaListStateComponent
 import java.io.Serializable
 
 // TODO: Change to Parcelable?
@@ -80,6 +82,7 @@ data class StreamingLocation(
     val displayName: String = "", // display_name
     val pathToMedia: String = "" // url
 ) : Entity()
+
 sealed class MediaSingleResponse(
     val results: List<Media>
 ) : Entity() {
@@ -105,11 +108,16 @@ sealed class MediaPagedResponse(
 
 data class Category(
     val title: String,
-    val liveDataMediaList: MutableLiveData<List<Media>> = MutableLiveData(),
     var fetcherFn: (() -> Unit)? = null
 ) : Entity() {
-    fun updateMediaList(mediaList: List<Media>) {
-        liveDataMediaList.postValue(mediaList)
+
+    private val _mediaListState: MutableLiveData<MediaListStateComponent> by lazy { MutableLiveData<MediaListStateComponent>() }
+    val mediaListState: LiveData<MediaListStateComponent>
+        get() = _mediaListState
+
+
+    fun updateMediaListState(newState: MediaListStateComponent) {
+        _mediaListState.postValue(newState)
     }
 
     fun fetchMedia() = fetcherFn?.let { fn ->
