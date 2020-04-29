@@ -18,9 +18,11 @@ import com.versilistyson.searchflix.data.util.NetworkConstants
 import com.versilistyson.searchflix.databinding.FragmentMediaDetailsBinding
 import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
 import com.versilistyson.searchflix.di.util.activityInjector
+import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.StreamingServiceAdapter
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -28,6 +30,7 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
+@InternalCoroutinesApi
 class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsBinding> {
 
     @Inject
@@ -67,19 +70,24 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().toolbar.setOnMenuItemClickListener {menuItem ->
+            if (menuItem.itemId == R.id.menu_item_favorite) {
+                val movie = args.media as Media.Movie
+
+                viewModel.persistMovie(movie.copy(isFavorite = true))
+
+                requireActivity().toolbar.menu.findItem(menuItem.itemId).setIcon(R.drawable.ic_bottom_nav_favorite)
+                Toast.makeText(context, "${movie.title} is Favorited!", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+
         viewModel.getAvailableStreamingPlatforms(args.media.id)
         setupRecyclerView()
         renderReleaseDate()
         renderSummary()
         renderRatings()
         renderState()
-
-        requireActivity().toolbar.setOnMenuItemClickListener { menuItem ->
-            if (menuItem.itemId == R.id.menu_item_favorite) {
-                Toast.makeText(context, "Favorites Clicked!", Toast.LENGTH_SHORT).show()
-            }
-            true
-        }
 
         binding.tvTitle.text = args.media.name
         Picasso.get().load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + args.media.posterPath)

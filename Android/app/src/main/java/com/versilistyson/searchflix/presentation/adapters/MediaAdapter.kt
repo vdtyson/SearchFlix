@@ -16,7 +16,7 @@ import com.versilistyson.searchflix.domain.entities.Media
 
 class MediaAdapter(
     lifecycleOwner: LifecycleOwner,
-    private val onMediaItemClick: ((Media) -> Unit)?,
+    private val onMediaItemClick: ((Media) -> Unit)? = null,
     val liveDataMediaList: MutableLiveData<List<Media>> = MutableLiveData()
 ) : RecyclerView.Adapter<MediaAdapter.MediaHolder>() {
 

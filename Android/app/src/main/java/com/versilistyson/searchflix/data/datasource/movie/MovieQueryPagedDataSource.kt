@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.data.datasource.search
+package com.versilistyson.searchflix.data.datasource.movie
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
