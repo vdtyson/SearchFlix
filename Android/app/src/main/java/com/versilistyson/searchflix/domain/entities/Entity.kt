@@ -2,11 +2,23 @@ package com.versilistyson.searchflix.domain.entities
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.versilistyson.searchflix.data.local.model.MediaData
+import com.versilistyson.searchflix.data.local.model.Persistent
+import com.versilistyson.searchflix.domain.common.Mappable
 import com.versilistyson.searchflix.presentation.dashboard.MediaListStateComponent
 import java.io.Serializable
 
 // TODO: Change to Parcelable?
 sealed class Entity : Serializable
+abstract class Persistable<Self: Persistable<Self, P>,P: Persistent >: Entity() {
+
+    abstract fun toPersistent() : P
+
+    private val mapper = object : Mappable<P> {
+        override fun map(): P = toPersistent()
+    }
+    fun mapToPersistent(): P = mapper.map()
+}
 
 enum class MediaType : Serializable {
     TV,
@@ -22,19 +34,21 @@ sealed class Media(
     val backdropPath: String,
     val type: MediaType,
     val voteAverage: Double,
-    val voteCount: Int
-) : Entity() {
+    val voteCount: Int,
+    val isMediaFavorite: Boolean
+) : Persistable<Media, MediaData>() {
 
     data class Movie(
-        val movieId: Int,
+        val movieId: Int = -1,
         val title: String = "",
         val overview: String = "",
-        val movieReleaseDate: String,
+        val movieReleaseDate: String = "",
         val moviePosterPath: String = "",
         val movieBackdropPath: String = "",
         val popularity: Double = 0.0,
         val movieVoteAverage: Double = 0.0,
-        val movieVoteCount: Int = 0
+        val movieVoteCount: Int = 0,
+        val isFavorite: Boolean = false
     ) : Media(
         movieId,
         title,
@@ -44,7 +58,8 @@ sealed class Media(
         movieBackdropPath,
         MediaType.MOVIE,
         movieVoteAverage,
-        movieVoteCount
+        movieVoteCount,
+        isFavorite
     )
 
     data class Show(
@@ -55,7 +70,8 @@ sealed class Media(
         val showPosterPath: String = "",
         val showBackdropPath: String = "",
         val showVoteAverage: Double = 0.0,
-        val showVoteCount: Int = 0
+        val showVoteCount: Int = 0,
+        val isFavorite: Boolean = false
     ) : Media(
         showId,
         title,
@@ -65,8 +81,23 @@ sealed class Media(
         showBackdropPath,
         MediaType.TV,
         showVoteAverage,
-        showVoteCount
+        showVoteCount,
+        isFavorite
     )
+
+    override fun toPersistent(): MediaData =
+        MediaData(
+            mediaId = id.toLong(),
+            title = name,
+            overview = summary,
+            releaseDate = releaseDate,
+            posterPath = posterPath,
+            backdropPath = backdropPath,
+            voteAverage = voteAverage,
+            voteCount = voteCount.toLong(),
+            isFavorite = isMediaFavorite,
+            type = type.name
+        )
 }
 
 data class StreamLookupResponse(

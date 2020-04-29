@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.data.datasource.search
+package com.versilistyson.searchflix.data.datasource.movie
 
 import com.versilistyson.searchflix.data.remote.api.MovieApi
 import com.versilistyson.searchflix.data.remote.dto.MovieDto

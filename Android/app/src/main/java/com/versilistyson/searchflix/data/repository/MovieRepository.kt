@@ -3,8 +3,9 @@ package com.versilistyson.searchflix.data.repository
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.versilistyson.searchflix.data.datasource.search.MovieQueryPagedDataSourceFactory
-import com.versilistyson.searchflix.data.datasource.search.MovieRemoteSource
+import com.versilistyson.searchflix.data.datasource.movie.MovieLocalSource
+import com.versilistyson.searchflix.data.datasource.movie.MovieQueryPagedDataSourceFactory
+import com.versilistyson.searchflix.data.datasource.movie.MovieRemoteSource
 import com.versilistyson.searchflix.data.util.handleFailure
 import com.versilistyson.searchflix.data.util.handleNetworkResult
 import com.versilistyson.searchflix.domain.common.Either
@@ -12,10 +13,39 @@ import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.domain.entities.MediaPagedResponse.MoviePagedResponse
 import com.versilistyson.searchflix.domain.entities.MediaSingleResponse.MovieSingleResponse
 import com.versilistyson.searchflix.domain.exception.Failure
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
+
 
 class MovieRepository
-@Inject constructor(private val movieRemoteSource: MovieRemoteSource) {
+@Inject constructor(
+    private val movieLocalSource: MovieLocalSource,
+    private val movieRemoteSource: MovieRemoteSource
+) {
+
+    suspend fun save(vararg movies: Media.Movie) {
+
+        val mappedMovies =
+            movies.map { movie -> movie.mapToPersistent() }.toTypedArray()
+
+        movieLocalSource.insert(*mappedMovies)
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getFavoriteMoviesFlow(coroutineContext: CoroutineContext = Dispatchers.IO) =
+        movieLocalSource.getMovieFavoritesFlow().map { list ->
+            list.map {mediaData ->
+                mediaData.mapToEntity()
+            }
+        }.flowOn(coroutineContext)
+
+    @ExperimentalCoroutinesApi
+    fun getFlowOfIsFavorite(id: Int, coroutineContext: CoroutineContext = Dispatchers.IO) =
+        movieLocalSource.getIsFavoriteByMediaId(id.toLong()).flowOn(coroutineContext)
 
     suspend fun getPopularMovies(
         language: String = "en-US",
@@ -53,7 +83,11 @@ class MovieRepository
         pageSize: Int
     ): LiveData<PagedList<Media.Movie>> {
         val factory =
-            MovieQueryPagedDataSourceFactory(query, isAdultIncluded, language) { page ->
+            MovieQueryPagedDataSourceFactory(
+                query,
+                isAdultIncluded,
+                language
+            ) { page ->
                 movieRemoteSource.fetchMovieQueryResults(query, isAdultIncluded, language, page)
             }.mapByPage { movieDtoList ->
                 movieDtoList.map { it.mapToEntity() }

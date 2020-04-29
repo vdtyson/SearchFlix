@@ -6,21 +6,17 @@ import androidx.room.Query
 import androidx.room.Update
 import com.versilistyson.searchflix.data.local.model.MediaData
 import com.versilistyson.searchflix.domain.entities.Media
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface MediaDao {
-    @Query("SELECT * from media_table WHERE title LIKE :likeTitle")
-    suspend fun getMediaByLikeTitle(likeTitle: String): List<MediaData>
-
-    @Query("SELECT * from media_table WHERE title =:exactTitle")
-    suspend fun getMovieByExactTitle(exactTitle: String): List<MediaData>
-
-    @Update
-    suspend fun updateMedia(vararg media: Media): Int
-
-    @Delete
-    suspend fun deleteMedia(vararg media: Media): Int
+interface MediaDao: BaseDao<MediaData> {
 
     @Query("SELECT * FROM media_table WHERE is_favorite IS 1")
-    suspend fun getFavoriteMedia(): List<MediaData>
+    fun getFavoriteMedia(): Flow<List<MediaData>>
+
+    @Query("SELECT * FROM media_table WHERE is_favorite IS 1 AND type =:mediaType")
+    fun getFavoriteMediaByType(mediaType: String): Flow<List<MediaData>>
+
+    @Query("SELECT is_favorite FROM media_table WHERE media_id =:id")
+    fun getIsFavoriteByMediaId(id: Long): Flow<Boolean?>
 }

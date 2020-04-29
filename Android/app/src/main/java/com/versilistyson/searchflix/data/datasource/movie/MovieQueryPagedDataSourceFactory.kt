@@ -1,9 +1,7 @@
-package com.versilistyson.searchflix.data.datasource.search
+package com.versilistyson.searchflix.data.datasource.movie
 
 import androidx.paging.DataSource
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
-import com.versilistyson.searchflix.data.remote.api.MovieApi
+import com.versilistyson.searchflix.data.datasource.movie.MovieQueryPagedDataSource
 import com.versilistyson.searchflix.data.remote.dto.MovieDto
 import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
 import retrofit2.Call
@@ -17,6 +15,11 @@ constructor(
 ) : DataSource.Factory<Int, MovieDto>() {
 
     override fun create(): DataSource<Int, MovieDto> =
-        MovieQueryPagedDataSource(query, isAdultIncluded, language, fetchFn)
+        MovieQueryPagedDataSource(
+            query,
+            isAdultIncluded,
+            language,
+            fetchFn
+        )
 
 }

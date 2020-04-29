@@ -19,9 +19,11 @@ import com.versilistyson.searchflix.domain.entities.Category
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.CategoryAdapter
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 
+@InternalCoroutinesApi
 class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding> {
 
     @Inject

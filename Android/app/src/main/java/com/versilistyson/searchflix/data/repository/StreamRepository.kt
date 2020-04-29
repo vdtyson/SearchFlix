@@ -1,8 +1,7 @@
 package com.versilistyson.searchflix.data.repository
 
-import com.versilistyson.searchflix.data.datasource.search.StreamRemoteSource
+import com.versilistyson.searchflix.data.datasource.stream.StreamRemoteSource
 import com.versilistyson.searchflix.data.util.NetworkResult
-import com.versilistyson.searchflix.data.util.handleFailure
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.entities.StreamLookupResponse
 import com.versilistyson.searchflix.domain.exception.Failure

@@ -17,11 +17,13 @@ import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
 import com.versilistyson.searchflix.di.util.activityInjector
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.MediaPagedAdapter
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
+@InternalCoroutinesApi
 class MediaSearchFragment : Fragment() {
 
     @Inject
