@@ -4,127 +4,89 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.versilistyson.searchflix.data.local.SharedPrefManager
 import com.versilistyson.searchflix.data.repository.MovieRepository
+import com.versilistyson.searchflix.domain.entities.MediaPagedResponse
+import com.versilistyson.searchflix.domain.entities.MediaSingleResponse
+import com.versilistyson.searchflix.domain.exception.Failure
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
-
 class DashboardViewModel
-@Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+@Inject constructor(
+    private val movieRepository: MovieRepository,
+    private val sharedPrefManager: SharedPrefManager
+) : ViewModel() {
 
-    private val _dashboardState: MutableLiveData<DashboardState> by lazy {
-        MutableLiveData<DashboardState>()
+    private val dashboardState by lazy { DashboardState() }
+
+    val popularMoviesState: LiveData<MediaListStateComponent>
+        get() = dashboardState.popularMoviesComponent
+
+    val upcomingMoviesState: LiveData<MediaListStateComponent>
+        get() = dashboardState.upcomingMoviesComponent
+
+    val topRatedMoviesState: LiveData<MediaListStateComponent>
+        get() = dashboardState.topRatedMoviesComponent
+
+    private fun getLanguageAndRegion(): String {
+
+        val languageAndRegion = sharedPrefManager.fetchLanguageAndRegion()
+
+        return languageAndRegion ?: "en-US"
     }
 
-    val dashboardState: LiveData<DashboardState>
-        get() = _dashboardState
+    fun getPopularMovies(page: Int = 1) {
 
+        dashboardState.popularMoviesComponent.postLoadingState()
 
-    private var currentState: DashboardState? = null
+        viewModelScope.launch(Dispatchers.IO) {
 
-    fun getPopularMovies(language: String = "en-US", page: Int = 1) {
-        viewModelScope.launch {
+            val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
 
-            updatePopularMoviesComponent(MediaListStateComponent.Loading)
+            movieRepository.getPopularMovies(languageAndRegion.await(), page).fold(
+                { failure -> dashboardState.popularMoviesComponent.postErrorState(failure) },
+                { moviePagedResponse ->
+                    dashboardState.popularMoviesComponent.postDataState(moviePagedResponse.results)
+                }
+            )
 
-            launch(Dispatchers.IO) {
-                movieRepository.getPopularMovies(language, page).fold(
-
-                    { failure ->
-                        val newPopularMoviesComponentState = MediaListStateComponent.Error(failure)
-                        updatePopularMoviesComponent(newPopularMoviesComponentState)
-                    },
-
-                    { moviePagedResponse ->
-                        val newComponentState = MediaListStateComponent.Data(moviePagedResponse.movieResults)
-                        updatePopularMoviesComponent(newComponentState)
-                    }
-                )
-            }
         }
     }
 
     fun getUpcomingMovies(language: String = "en-US") {
-        viewModelScope.launch {
 
-            updateUpcomingMoviesComponent(MediaListStateComponent.Loading)
+        dashboardState.upcomingMoviesComponent.postLoadingState()
 
-            launch(Dispatchers.IO) {
-                movieRepository.getUpcomingMovies(language).fold(
-                    { failure ->
-                        val newState = MediaListStateComponent.Error(failure)
-                        updateUpcomingMoviesComponent(newState)
-                    },
-                    { movieSingleResponse ->
+        viewModelScope.launch(Dispatchers.IO) {
+            movieRepository.getUpcomingMovies(language).fold(
 
-                        val newState = MediaListStateComponent.Data(movieSingleResponse.movieResults)
+                { failure -> dashboardState.upcomingMoviesComponent.postErrorState(failure)},
 
-                        updateUpcomingMoviesComponent(newState)
-
-                    }
-                )
-            }
-
+                { movieSingleResponse ->
+                    dashboardState.upcomingMoviesComponent.postDataState(movieSingleResponse.movieResults)
+                }
+            )
         }
     }
 
     fun getTopRatedMovies(language: String = "en-US", page: Int = 1) {
 
-        viewModelScope.launch {
+        dashboardState.topRatedMoviesComponent.postLoadingState()
 
-            updateTopRatedMoviesComponent(MediaListStateComponent.Loading)
-
-            launch(Dispatchers.IO) {
-                movieRepository.getTopRatedMovies(language, page).fold(
-                    { failure ->
-                        updateTopRatedMoviesComponent(MediaListStateComponent.Error(failure))
-                    },
-                    { moviePagedResponse ->
-
-                        val topRatedMovieList = moviePagedResponse.movieResults
-
-                        updateTopRatedMoviesComponent(MediaListStateComponent.Data(topRatedMovieList))
-                    }
-                )
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            movieRepository.getTopRatedMovies(language, page).fold(
+                { failure ->
+                    dashboardState.topRatedMoviesComponent.postErrorState(failure)
+                },
+                { moviePagedResponse ->
+                    dashboardState.topRatedMoviesComponent.postDataState(moviePagedResponse.movieResults)
+                }
+            )
         }
-    }
 
-    private fun updateState(
-        default: DashboardState,
-        whenStateNotNull: (currentState: DashboardState) -> DashboardState
-    ) {
-        when (currentState) {
-            null -> {
-                currentState = default
-                _dashboardState.postValue(default)
-            }
-            else -> {
-                currentState = whenStateNotNull(currentState!!)
-                _dashboardState.postValue(currentState)
-
-            }
-        }
-    }
-
-    private fun updatePopularMoviesComponent(mediaListStateComponent: MediaListStateComponent) {
-        updateState(DashboardState(popularMoviesComponent = mediaListStateComponent)) { currentState ->
-            currentState.copy(popularMoviesComponent = mediaListStateComponent)
-        }
-    }
-
-    private fun updateUpcomingMoviesComponent(mediaListStateComponent: MediaListStateComponent) {
-        updateState(DashboardState(upcomingMoviesComponent = mediaListStateComponent)) { currentState ->
-            currentState.copy(upcomingMoviesComponent = mediaListStateComponent)
-        }
-    }
-
-    private fun updateTopRatedMoviesComponent(mediaListStateComponent: MediaListStateComponent) {
-        updateState(DashboardState(topRatedMoviesComponent = mediaListStateComponent)) { currentState ->
-            currentState.copy(topRatedMoviesComponent = mediaListStateComponent)
-        }
     }
 }

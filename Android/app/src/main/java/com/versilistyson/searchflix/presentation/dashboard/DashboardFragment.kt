@@ -19,6 +19,8 @@ import com.versilistyson.searchflix.domain.entities.Category
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.CategoryAdapter
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.util.provideLinearLayoutManager
+import com.versilistyson.searchflix.presentation.util.showToast
 import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
@@ -34,15 +36,14 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     private lateinit var categoryAdapter: CategoryAdapter
 
-    private val popularMoviesCategory by lazy { Category("Popular Movies") }
-    private val topRatedMoviesCategory by lazy { Category("Top Rated Movies") }
-    private val upcomingMoviesCategory by lazy { Category("Upcoming Movies") }
-    private val categoryList by lazy {
-        listOf(
-            popularMoviesCategory,
-            topRatedMoviesCategory,
-            upcomingMoviesCategory
-        )
+    private val popularMoviesCategory by lazy {
+        Category("Popular Movies", viewModel.popularMoviesState) { viewModel.getPopularMovies() }
+    }
+    private val topRatedMoviesCategory by lazy {
+        Category("Top Rated Movies", viewModel.topRatedMoviesState) { viewModel.getTopRatedMovies() }
+    }
+    private val upcomingMoviesCategory by lazy {
+        Category("Upcoming Movies", viewModel.upcomingMoviesState) { viewModel.getUpcomingMovies() }
     }
 
     override lateinit var binding: FragmentDashboardBinding
@@ -63,52 +64,21 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        renderState()
-        setFetchersForCategories()
         setupRecyclerView()
     }
 
 
-    private fun renderState() {
-        viewModel.dashboardState.observe(
-            viewLifecycleOwner,
-            Observer { latestState ->
-                popularMoviesCategory.onStateChanged(latestState.popularMoviesComponent)
-                upcomingMoviesCategory.onStateChanged(latestState.upcomingMoviesComponent)
-                topRatedMoviesCategory.onStateChanged(latestState.topRatedMoviesComponent)
-            }
-        )
-    }
-
-    private fun Category.onStateChanged(state: MediaListStateComponent) =
-        updateMediaListState(state)
-
-    private fun setFetchersForCategories() {
-        upcomingMoviesCategory.fetcherFn = {
-                viewModel.getUpcomingMovies()
-        }
-        popularMoviesCategory.fetcherFn = {
-                viewModel.getPopularMovies()
-        }
-
-        topRatedMoviesCategory.fetcherFn = {
-            viewModel.getTopRatedMovies()
-        }
-    }
 
     private fun setupRecyclerView() {
 
-        val linearLayoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
         categoryAdapter = CategoryAdapter(
             viewLifecycleOwner,
-            categoryList,
+            listOf(popularMoviesCategory, topRatedMoviesCategory, upcomingMoviesCategory),
             onCategoryTitleClickListener,
             ::onMediaItemClick
         )
 
-        binding.categoryRecyclerView.layoutManager = linearLayoutManager
+        binding.categoryRecyclerView.layoutManager = provideLinearLayoutManager(LinearLayoutManager.VERTICAL)
         binding.categoryRecyclerView.adapter = categoryAdapter
     }
 

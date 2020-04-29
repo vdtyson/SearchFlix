@@ -10,13 +10,14 @@ import java.io.Serializable
 
 // TODO: Change to Parcelable?
 sealed class Entity : Serializable
-abstract class Persistable<Self: Persistable<Self, P>,P: Persistent >: Entity() {
+abstract class Persistable<Self : Persistable<Self, P>, P : Persistent> : Entity() {
 
-    abstract fun toPersistent() : P
+    abstract fun toPersistent(): P
 
     private val mapper = object : Mappable<P> {
         override fun map(): P = toPersistent()
     }
+
     fun mapToPersistent(): P = mapper.map()
 }
 
@@ -139,20 +140,50 @@ sealed class MediaPagedResponse(
 
 data class Category(
     val title: String,
+    val mediaListState: LiveData<MediaListStateComponent>,
     var fetcherFn: (() -> Unit)? = null
 ) : Entity() {
-
-    private val _mediaListState: MutableLiveData<MediaListStateComponent> by lazy { MutableLiveData<MediaListStateComponent>() }
-    val mediaListState: LiveData<MediaListStateComponent>
-        get() = _mediaListState
-
-
-    fun updateMediaListState(newState: MediaListStateComponent) {
-        _mediaListState.postValue(newState)
-    }
-
     fun fetchMedia() = fetcherFn?.let { fn ->
         fn()
     }
+}
+
+// ISO-639-1 code
+sealed class Language(val name: String, val code: String, val regions: Set<Region>) {
+    object ENGLISH : Language(
+        "English",
+        "en",
+        setOf(
+            Region.UNITED_STATES,
+            Region.UNITED_KINGDOM
+        )
+    )
+
+    object SPANISH : Language(
+        "Spanish",
+        "es",
+        setOf(
+            Region.MEXICO,
+            Region.SPAIN,
+            Region.COLOMBIA,
+            Region.ARGENTINA,
+            Region.UNITED_STATES
+        )
+    ) {
+    }
+}
+
+enum class Region(val regionName: String, val code: String) {
+    UNITED_STATES("United States", "US"),
+    UNITED_KINGDOM("United Kingdom", "GB"),
+    MEXICO("Mexico", "MX"),
+    SPAIN("Spain", "ES"),
+    COLOMBIA("Colombia", "CO"),
+    ARGENTINA("Argentina", "AR")
+}
+
+enum class Theme(val value: Int) {
+    DAY(0),
+    NIGHT(1)
 }
 

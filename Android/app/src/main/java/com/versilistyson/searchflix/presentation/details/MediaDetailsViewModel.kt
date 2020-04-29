@@ -8,10 +8,7 @@ import com.versilistyson.searchflix.data.repository.MovieRepository
 import com.versilistyson.searchflix.data.repository.StreamRepository
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.domain.entities.StreamLookupResponse
-import com.versilistyson.searchflix.domain.entities.StreamingLocation
 import com.versilistyson.searchflix.domain.exception.Failure
-import com.versilistyson.searchflix.presentation.common.UIState
-import com.versilistyson.searchflix.presentation.common.UIStateComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.FlowCollector

@@ -1,7 +1,19 @@
 package com.versilistyson.searchflix.presentation.dashboard
 
-data class DashboardState (
-    val popularMoviesComponent: MediaListStateComponent = MediaListStateComponent.Loading,
-    val upcomingMoviesComponent: MediaListStateComponent = MediaListStateComponent.Loading,
-    val topRatedMoviesComponent: MediaListStateComponent = MediaListStateComponent.Loading
-)
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.versilistyson.searchflix.presentation.common.UIState
+
+class DashboardState: UIState {
+    val popularMoviesComponent: MutableLiveData<MediaListStateComponent> by lazy {
+        MutableLiveData<MediaListStateComponent>()
+    }
+
+    val upcomingMoviesComponent: MutableLiveData<MediaListStateComponent> by lazy {
+        MutableLiveData<MediaListStateComponent>()
+    }
+
+    val topRatedMoviesComponent: MutableLiveData<MediaListStateComponent> by lazy {
+        MutableLiveData<MediaListStateComponent>()
+    }
+}
