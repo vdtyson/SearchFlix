@@ -19,13 +19,13 @@ class FavoritesViewModel
 @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
 
-    private val _favoritesState: MutableLiveData<FavoritesState> by lazy {
-        MutableLiveData<FavoritesState>()
+    private val _liveDataFavoriteMovieList: MutableLiveData<List<Media.Movie>> by lazy {
+        MutableLiveData<List<Media.Movie>>()
     }
-    val favoritesState: LiveData<FavoritesState>
-        get() = _favoritesState
+    val liveDataFavoriteMovieList: LiveData<List<Media.Movie>>
+    get() = _liveDataFavoriteMovieList
 
-    private val movieCollector =
+    private val mediaCollector =
         object : FlowCollector<List<Media>> {
 
             override suspend fun emit(value: List<Media>) {
@@ -33,22 +33,13 @@ class FavoritesViewModel
                 value.forEach {
                     if(it is Media.Movie) movieList.add(it)
                 }
-
-                when(val state = _favoritesState.value) {
-                    null -> {
-                        _favoritesState.postValue(FavoritesState(favoriteMovies = movieList))
-                    }
-
-                    else -> {
-                        _favoritesState.postValue(state.copy(favoriteMovies = movieList))
-                    }
-                }
+                _liveDataFavoriteMovieList.postValue(movieList)
             }
         }
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            movieRepository.getFavoriteMoviesFlow().collect(movieCollector)
+            movieRepository.getFavoriteMoviesFlow().collect(mediaCollector)
         }
 
     }

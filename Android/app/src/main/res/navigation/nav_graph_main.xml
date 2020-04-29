@@ -25,7 +25,11 @@
         android:id="@+id/favoritesFragment"
         android:name="com.versilistyson.searchflix.presentation.favorites.FavoritesFragment"
         android:label="Favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_mediaDetailsFragment"
+            app:destination="@id/mediaDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mediaDetailsFragment"
         android:name="com.versilistyson.searchflix.presentation.details.MediaDetailsFragment"

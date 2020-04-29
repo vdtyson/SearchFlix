@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.FragmentFavoritesBinding
 import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
 import com.versilistyson.searchflix.di.util.activityInjector
+import com.versilistyson.searchflix.domain.entities.Media
+import com.versilistyson.searchflix.presentation.adapters.FavoritesAdapter
 import com.versilistyson.searchflix.presentation.adapters.MediaAdapter
 import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +35,7 @@ class FavoritesFragment : Fragment(), DataBindingScreen<FragmentFavoritesBinding
     }
 
     override lateinit var binding: FragmentFavoritesBinding
-    private lateinit var adapter: MediaAdapter
+    private lateinit var adapter: FavoritesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityInjector.inject(this)
@@ -49,22 +53,20 @@ class FavoritesFragment : Fragment(), DataBindingScreen<FragmentFavoritesBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRV()
-        viewModel.favoritesState.observe(
-            viewLifecycleOwner,
-            Observer(::renderState)
-        )
     }
 
-    private fun renderState(favoritesState: FavoritesState) {
-        adapter.liveDataMediaList.postValue(favoritesState.favoriteMovies)
-    }
 
     private fun setupRV() {
-        adapter = MediaAdapter(viewLifecycleOwner)
+        adapter = FavoritesAdapter(viewLifecycleOwner, viewModel.liveDataFavoriteMovieList, ::onMediaItemClicked)
 
         binding.rvFavorites.adapter = adapter
         binding.rvFavorites.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 
+    }
+
+    private fun onMediaItemClicked(media: Media) {
+        val toMediaDetailsFragment = FavoritesFragmentDirections.actionFavoritesFragmentToMediaDetailsFragment(media, media.name)
+        findNavController().navigate(toMediaDetailsFragment)
     }
 }

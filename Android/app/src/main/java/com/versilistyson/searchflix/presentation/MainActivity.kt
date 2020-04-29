@@ -118,16 +118,14 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        binding.toolbar.setOnMenuItemClickListener(
-            Toolbar.OnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.menu_item_search -> {
-                        binding.searchView.openSearch()
-                    }
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_item_search -> {
+                    binding.searchView.openSearch()
                 }
-                return@OnMenuItemClickListener true
             }
-        )
+            true
+        }
     }
 
     override fun onBackPressed() {
