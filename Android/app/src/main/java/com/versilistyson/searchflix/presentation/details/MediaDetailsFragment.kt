@@ -70,14 +70,27 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getIsFavoriteFlow(args.media.id)
+        viewModel.isFavorited.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer(::renderIsFavorited)
+        )
+
         requireActivity().toolbar.setOnMenuItemClickListener {menuItem ->
             if (menuItem.itemId == R.id.menu_item_favorite) {
                 val movie = args.media as Media.Movie
+                when(viewModel.isFavorited.value) {
+                    true -> {
+                        viewModel.persistMovie(movie.copy(isFavorite = false))
+                        Toast.makeText(context, "Unfavorited!", Toast.LENGTH_SHORT).show()
+                    }
 
-                viewModel.persistMovie(movie.copy(isFavorite = true))
+                    else -> {
+                        viewModel.persistMovie(movie.copy(isFavorite = true))
+                        Toast.makeText(context, "Favorited!", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
-                requireActivity().toolbar.menu.findItem(menuItem.itemId).setIcon(R.drawable.ic_bottom_nav_favorite)
-                Toast.makeText(context, "${movie.title} is Favorited!", Toast.LENGTH_SHORT).show()
             }
             true
         }
@@ -106,6 +119,21 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
         binding.rvStreamingPlatforms.layoutManager = layoutManager
     }
 
+    private fun renderIsFavorited(isFavorited: Boolean) {
+        when(isFavorited) {
+            true -> {
+                requireActivity().toolbar
+                    .menu.findItem(R.id.menu_item_favorite)
+                    .setIcon(R.drawable.ic_bottom_nav_favorite)
+            }
+
+            false -> {
+                requireActivity().toolbar
+                    .menu.findItem(R.id.menu_item_favorite)
+                    .setIcon(R.drawable.ic_favorite_border_black_24dp)
+            }
+        }
+    }
     private fun renderState() {
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,

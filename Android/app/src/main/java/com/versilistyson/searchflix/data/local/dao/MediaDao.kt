@@ -16,4 +16,7 @@ interface MediaDao: BaseDao<MediaData> {
 
     @Query("SELECT * FROM media_table WHERE is_favorite IS 1 AND type =:mediaType")
     fun getFavoriteMediaByType(mediaType: String): Flow<List<MediaData>>
+
+    @Query("SELECT is_favorite FROM media_table WHERE media_id =:id")
+    fun getIsFavoriteByMediaId(id: Long): Flow<Boolean?>
 }

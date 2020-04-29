@@ -1,5 +1,6 @@
 package com.versilistyson.searchflix.presentation.details
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,10 +13,13 @@ import com.versilistyson.searchflix.domain.exception.Failure
 import com.versilistyson.searchflix.presentation.common.UIState
 import com.versilistyson.searchflix.presentation.common.UIStateComponent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@InternalCoroutinesApi
 class MediaDetailsViewModel
 @Inject constructor(
     private val movieRepository: MovieRepository,
@@ -27,6 +31,28 @@ class MediaDetailsViewModel
     }
     val mediaDetailsState
     get() = _mediaDetailsState
+
+    private val _isFavorited: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>(false)
+    }
+    val isFavorited: LiveData<Boolean>
+    get() = _isFavorited
+
+    private val isFavoriteFlowCollector = object : FlowCollector<Boolean?> {
+        override suspend fun emit(value: Boolean?) {
+            value?.let {
+                _isFavorited.postValue(value)
+            }
+        }
+
+    }
+
+    fun getIsFavoriteFlow(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            movieRepository.getFlowOfIsFavorite(id).collect(isFavoriteFlowCollector)
+        }
+    }
+
 
     fun persistMovie(movie: Media.Movie) {
         viewModelScope.launch(Dispatchers.IO) {

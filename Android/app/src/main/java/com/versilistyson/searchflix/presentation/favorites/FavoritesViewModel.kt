@@ -48,7 +48,7 @@ class FavoritesViewModel
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            movieRepository.getFavoriteMoviesFlow(Dispatchers.IO).collect(movieCollector)
+            movieRepository.getFavoriteMoviesFlow().collect(movieCollector)
         }
 
     }

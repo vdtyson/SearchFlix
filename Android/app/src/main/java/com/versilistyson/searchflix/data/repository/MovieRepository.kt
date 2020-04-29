@@ -43,6 +43,10 @@ class MovieRepository
             }
         }.flowOn(coroutineContext)
 
+    @ExperimentalCoroutinesApi
+    fun getFlowOfIsFavorite(id: Int, coroutineContext: CoroutineContext = Dispatchers.IO) =
+        movieLocalSource.getIsFavoriteByMediaId(id.toLong()).flowOn(coroutineContext)
+
     suspend fun getPopularMovies(
         language: String = "en-US",
         page: Int = 1

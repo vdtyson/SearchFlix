@@ -14,4 +14,7 @@ class MovieLocalSource
     suspend fun insert(vararg mediaData: MediaData) {
         mediaDao.insert(*mediaData)
     }
+
+    fun getIsFavoriteByMediaId(id: Long) =
+        mediaDao.getIsFavoriteByMediaId(id)
 }
