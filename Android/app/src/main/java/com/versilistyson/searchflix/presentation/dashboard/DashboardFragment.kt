@@ -35,6 +35,9 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
     }
 
     private lateinit var categoryAdapter: CategoryAdapter
+    private val linearLayoutManager by lazy {
+        provideLinearLayoutManager(LinearLayoutManager.VERTICAL)
+    }
 
     private val popularMoviesCategory by lazy {
         Category("Popular Movies", viewModel.popularMoviesState) { viewModel.getPopularMovies() }
@@ -64,29 +67,30 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
+
+        initCategoryAdapter()
+        setupRecyclerView(linearLayoutManager, categoryAdapter)
     }
 
 
-
-    private fun setupRecyclerView() {
-
+    private fun initCategoryAdapter() {
         categoryAdapter = CategoryAdapter(
             viewLifecycleOwner,
             listOf(popularMoviesCategory, topRatedMoviesCategory, upcomingMoviesCategory),
-            onCategoryTitleClickListener,
+            ::onCategoryTitleClicked,
             ::onMediaItemClick
         )
+    }
 
-        binding.categoryRecyclerView.layoutManager = provideLinearLayoutManager(LinearLayoutManager.VERTICAL)
+    private fun setupRecyclerView(linearLayoutManager: LinearLayoutManager, categoryAdapter: CategoryAdapter) {
+        binding.categoryRecyclerView.layoutManager = linearLayoutManager
         binding.categoryRecyclerView.adapter = categoryAdapter
     }
 
     // TODO: On click, add a page that goes to a paged fragment that goes to a full paged list screen.
-    private val onCategoryTitleClickListener =
-        View.OnClickListener {
-            Toast.makeText(this.context, "Title Clicked", Toast.LENGTH_SHORT).show()
-        }
+    private fun onCategoryTitleClicked(category: Category) =
+        showToast("${category.title} was clicked!")
+
 
     private fun onMediaItemClick(media: Media) {
 

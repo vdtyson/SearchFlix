@@ -17,45 +17,46 @@ import com.versilistyson.searchflix.presentation.dashboard.MediaListStateCompone
 class CategoryAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val categories: List<Category>,
-    private val onCategoryTitleClickListener: View.OnClickListener? = null,
+    private val onCategoryTitleClick: ((category: Category) -> Unit)? = null,
     val onMediaItemClick: ((Media) -> Unit)? = null
-): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
 
-    inner class CategoryViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val title: TextView = view.findViewById(R.id.categoryTitle)
         private val innerRecyclerView: RecyclerView = view.findViewById(R.id.recyclerViewMedia)
         private val progressBarCategory: ProgressBar = view.findViewById(R.id.progressBarCategory)
-        private val tvCategoryContentNotAvailable: TextView = view.findViewById(R.id.tvCategoryContentNotAvailable)
+        private val tvCategoryContentNotAvailable: TextView =
+            view.findViewById(R.id.tvCategoryContentNotAvailable)
 
         private val mediaAdapter = MediaAdapter(lifecycleOwner, onMediaItemClick)
 
         init {
             innerRecyclerView.layoutManager = provideInnerLayoutManager(view)
-
-            onCategoryTitleClickListener?.let {
-                title.setOnClickListener(onCategoryTitleClickListener)
-            }
         }
 
         fun bindTo(category: Category) {
 
             category.fetchMedia()
 
+            title.text = category.title
+            onCategoryTitleClick?.let { onClick ->
+                title.setOnClickListener {
+                    onClick(category)
+                }
+            }
+
             innerRecyclerView.adapter = mediaAdapter
 
             render(category)
-
-            title.text = category.title
-
         }
 
         private fun render(category: Category) {
             category.mediaListState.observe(
                 lifecycleOwner,
-                Observer {latestState ->
-                    when(latestState) {
+                Observer { latestState ->
+                    when (latestState) {
 
                         is MediaListStateComponent.Loading -> {
                             progressBarCategory.visibility = View.VISIBLE
