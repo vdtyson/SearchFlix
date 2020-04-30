@@ -33,7 +33,7 @@ class CategoryAdapter(
         private val progressBarCategory: ProgressBar = view.findViewById(R.id.progressBarCategory)
         private val tvCategoryContentNotAvailable: TextView =
             view.findViewById(R.id.tvCategoryContentNotAvailable)
-        private val mediaAdapter = MediaAdapter(lifecycleOwner, onMediaItemClick)
+        private val mediaAdapter = MediaAdapter(lifecycleOwner, onMediaItemClick = onMediaItemClick)
 
         init {
             innerRecyclerView.layoutManager = provideInnerLayoutManager(view)

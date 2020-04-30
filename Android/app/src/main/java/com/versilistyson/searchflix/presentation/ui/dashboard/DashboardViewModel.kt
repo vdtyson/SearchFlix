@@ -8,6 +8,7 @@ import com.versilistyson.searchflix.data.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -36,57 +37,66 @@ class DashboardViewModel
     }
 
     fun getPopularMovies(page: Int = 1) {
-
-        dashboardState.popularMoviesComponent.postLoadingState()
-
         viewModelScope.launch(Dispatchers.IO) {
 
+            withContext(Dispatchers.Main) { dashboardState.popularMoviesComponent.postLoadingState() }
+
             val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
+            val result = async(coroutineContext) {
+                movieRepository.getPopularMovies(languageAndRegion.await(), page)
+            }
 
-            movieRepository.getPopularMovies(languageAndRegion.await(), page).fold(
-                { failure -> dashboardState.popularMoviesComponent.postErrorState(failure) },
-                { moviePagedResponse ->
-                    dashboardState.popularMoviesComponent.postDataState(moviePagedResponse.results)
-                }
-            )
-
+            withContext(Dispatchers.Main) {
+                result.await().fold(
+                    { failure -> dashboardState.popularMoviesComponent.postErrorState(failure) },
+                    { moviePagedResponse ->
+                        dashboardState.popularMoviesComponent.postDataState(moviePagedResponse.results)
+                    }
+                )
+            }
         }
     }
 
     fun getUpcomingMovies() {
-
-        dashboardState.upcomingMoviesComponent.postLoadingState()
-
         viewModelScope.launch(Dispatchers.IO) {
 
-            val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
-            movieRepository.getUpcomingMovies(languageAndRegion.await()).fold(
-                { failure -> dashboardState.upcomingMoviesComponent.postErrorState(failure)},
+            withContext(Dispatchers.Main) { dashboardState.upcomingMoviesComponent.postLoadingState() }
 
-                { movieSingleResponse ->
-                    dashboardState.upcomingMoviesComponent.postDataState(movieSingleResponse.movieResults)
-                }
-            )
+            val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
+            val result = async(coroutineContext) {
+                movieRepository.getUpcomingMovies((languageAndRegion.await()))
+            }
+
+            withContext(Dispatchers.Main) {
+                result.await().fold(
+                    { failure -> dashboardState.upcomingMoviesComponent.postErrorState(failure) },
+                    { movieSingleResponse ->
+                        dashboardState.upcomingMoviesComponent.postDataState(movieSingleResponse.movieResults)
+                    }
+                )
+            }
         }
     }
 
     fun getTopRatedMovies(page: Int = 1) {
 
-        dashboardState.topRatedMoviesComponent.postLoadingState()
-
         viewModelScope.launch(Dispatchers.IO) {
 
+            withContext(Dispatchers.Main) {dashboardState.topRatedMoviesComponent.postLoadingState()}
+
             val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
+            val result = async(coroutineContext) {
+                movieRepository.getTopRatedMovies(languageAndRegion.await(), page)
+            }
 
-            movieRepository.getTopRatedMovies(languageAndRegion.await(), page).fold(
-                { failure ->
-                    dashboardState.topRatedMoviesComponent.postErrorState(failure)
-                },
-                { moviePagedResponse ->
-                    dashboardState.topRatedMoviesComponent.postDataState(moviePagedResponse.movieResults)
-                }
-            )
+            withContext(Dispatchers.Main) {
+                result.await().fold(
+                    { failure -> dashboardState.topRatedMoviesComponent.postErrorState(failure) },
+                    {moviePagedResponse ->
+                        dashboardState.topRatedMoviesComponent.postDataState(moviePagedResponse.results)
+                    }
+                )
+            }
         }
-
     }
 }
