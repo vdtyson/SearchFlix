@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.versilistyson.searchflix.presentation.dashboard.DashboardFragment"
+        android:name="com.versilistyson.searchflix.presentation.ui.dashboard.DashboardFragment"
         android:label="Dashboard"
         tools:layout="@layout/fragment_dashboard" >
         <action
@@ -18,12 +18,12 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.versilistyson.searchflix.presentation.settings.SettingsFragment"
+        android:name="com.versilistyson.searchflix.presentation.ui.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.versilistyson.searchflix.presentation.favorites.FavoritesFragment"
+        android:name="com.versilistyson.searchflix.presentation.ui.favorites.FavoritesFragment"
         android:label="Favorites"
         tools:layout="@layout/fragment_favorites" >
         <action
@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/mediaDetailsFragment"
-        android:name="com.versilistyson.searchflix.presentation.details.MediaDetailsFragment"
+        android:name="com.versilistyson.searchflix.presentation.ui.details.MediaDetailsFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_media_details" >
         <argument
@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/mediaSearchFragment"
-        android:name="com.versilistyson.searchflix.presentation.search.MediaSearchFragment"
+        android:name="com.versilistyson.searchflix.presentation.ui.search.MediaSearchFragment"
         android:label="Search results for '{query}'"
         tools:layout="@layout/fragment_media_search" >
         <argument

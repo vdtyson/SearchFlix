@@ -1,7 +1,6 @@
 package com.versilistyson.searchflix.presentation
 
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -14,8 +13,8 @@ import com.versilistyson.searchflix.NavGraphMainDirections
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.ActivityMainBinding
 import com.versilistyson.searchflix.domain.entities.MediaType
-import com.versilistyson.searchflix.presentation.common.activity.BaseActivity
-import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.ui.common.activity.BaseActivity
+import com.versilistyson.searchflix.presentation.ui.common.activity.DataBindingScreen
 import com.versilistyson.searchflix.presentation.util.clearMenu
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {

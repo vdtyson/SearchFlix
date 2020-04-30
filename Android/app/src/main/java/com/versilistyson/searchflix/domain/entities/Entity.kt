@@ -1,11 +1,10 @@
 package com.versilistyson.searchflix.domain.entities
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.versilistyson.searchflix.data.local.model.MediaData
 import com.versilistyson.searchflix.data.local.model.Persistent
 import com.versilistyson.searchflix.domain.common.Mappable
-import com.versilistyson.searchflix.presentation.dashboard.MediaListStateComponent
+import com.versilistyson.searchflix.presentation.ui.dashboard.MediaListStateComponent
 import java.io.Serializable
 
 // TODO: Change to Parcelable?

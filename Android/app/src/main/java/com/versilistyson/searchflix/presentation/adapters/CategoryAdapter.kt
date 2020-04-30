@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.domain.entities.Category
 import com.versilistyson.searchflix.domain.entities.Media
-import com.versilistyson.searchflix.presentation.dashboard.MediaListStateComponent
+import com.versilistyson.searchflix.presentation.ui.dashboard.MediaListStateComponent
 
 class CategoryAdapter(
     private val lifecycleOwner: LifecycleOwner,
@@ -27,8 +27,7 @@ class CategoryAdapter(
         private val title: TextView = view.findViewById(R.id.categoryTitle)
         private val innerRecyclerView: RecyclerView = view.findViewById(R.id.recyclerViewMedia)
         private val progressBarCategory: ProgressBar = view.findViewById(R.id.progressBarCategory)
-        private val tvCategoryContentNotAvailable: TextView =
-            view.findViewById(R.id.tvCategoryContentNotAvailable)
+        private val tvCategoryContentNotAvailable: TextView = view.findViewById(R.id.tvCategoryContentNotAvailable)
 
         private val mediaAdapter = MediaAdapter(lifecycleOwner, onMediaItemClick)
 
@@ -84,7 +83,7 @@ class CategoryAdapter(
                                 }
                             }
 
-                            mediaAdapter.liveDataMediaList.postValue(latestState.value)
+                            mediaAdapter.postValue(latestState.value)
                         }
                     }
                 }
