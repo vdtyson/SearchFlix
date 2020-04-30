@@ -2,21 +2,34 @@ package com.versilistyson.searchflix.presentation.adapters.common
 
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BaseRecylerViewAdapter<T, VH : BaseViewHolder<T>>:
+abstract class BaseRecylerViewAdapter<T, VH : BaseViewHolder<T>>(initialList: Collection<T> = mutableListOf()) :
     RecyclerView.Adapter<VH>() {
 
-    protected open var itemList: MutableList<T> = mutableListOf()
+    protected open var itemList: MutableList<T> = initialList.toMutableList()
 
-    open override fun getItemCount(): Int = itemList.size
+    override fun getItemCount(): Int = itemList.size
 
-    open fun add(vararg obj: T) {
-        obj.forEach {
-            itemList.add(it)
+    fun add(vararg items: T) {
+        items.forEach { item ->
+            itemList.add(item)
             notifyItemInserted(itemList.lastIndex)
         }
     }
 
-    open fun removeItemAt(index: Int) {
+    fun update(newList: Collection<T>) {
+        itemList = newList.toMutableList()
+        notifyDataSetChanged()
+    }
+
+    fun clear() {
+        if (itemList.isNotEmpty()) {
+            val tempLastIndex = itemList.lastIndex
+            itemList.clear()
+            notifyItemRangeRemoved(0, tempLastIndex)
+        }
+    }
+
+    fun removeAt(index: Int) {
         itemList.removeAt(index)
         notifyItemRemoved(index)
     }

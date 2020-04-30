@@ -47,4 +47,6 @@ class MediaAdapter(
 
         return MediaHolder(inflatedView)
     }
+
+
 }

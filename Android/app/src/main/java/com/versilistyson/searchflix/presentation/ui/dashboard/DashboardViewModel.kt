@@ -38,7 +38,6 @@ class DashboardViewModel
     fun getPopularMovies(page: Int = 1) {
 
         dashboardState.popularMoviesComponent.postLoadingState()
-
         viewModelScope.launch(Dispatchers.IO) {
 
             val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
@@ -53,13 +52,14 @@ class DashboardViewModel
         }
     }
 
-    fun getUpcomingMovies(language: String = "en-US") {
+    fun getUpcomingMovies() {
 
         dashboardState.upcomingMoviesComponent.postLoadingState()
 
         viewModelScope.launch(Dispatchers.IO) {
-            movieRepository.getUpcomingMovies(language).fold(
 
+            val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
+            movieRepository.getUpcomingMovies(languageAndRegion.await()).fold(
                 { failure -> dashboardState.upcomingMoviesComponent.postErrorState(failure)},
 
                 { movieSingleResponse ->
@@ -69,12 +69,15 @@ class DashboardViewModel
         }
     }
 
-    fun getTopRatedMovies(language: String = "en-US", page: Int = 1) {
+    fun getTopRatedMovies(page: Int = 1) {
 
         dashboardState.topRatedMoviesComponent.postLoadingState()
 
         viewModelScope.launch(Dispatchers.IO) {
-            movieRepository.getTopRatedMovies(language, page).fold(
+
+            val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }
+
+            movieRepository.getTopRatedMovies(languageAndRegion.await(), page).fold(
                 { failure ->
                     dashboardState.topRatedMoviesComponent.postErrorState(failure)
                 },
