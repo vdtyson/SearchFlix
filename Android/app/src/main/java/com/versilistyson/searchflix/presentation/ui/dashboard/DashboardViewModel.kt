@@ -19,13 +19,13 @@ class DashboardViewModel
 
     private val dashboardState by lazy { DashboardState() }
 
-    val popularMoviesState: LiveData<MediaListStateComponent>
+    val popularMovies: LiveData<MediaListStateComponent>
         get() = dashboardState.popularMoviesComponent
 
-    val upcomingMoviesState: LiveData<MediaListStateComponent>
+    val upcomingMovies: LiveData<MediaListStateComponent>
         get() = dashboardState.upcomingMoviesComponent
 
-    val topRatedMoviesState: LiveData<MediaListStateComponent>
+    val topRatedMovies: LiveData<MediaListStateComponent>
         get() = dashboardState.topRatedMoviesComponent
 
     private fun getLanguageAndRegion(): String {
@@ -38,6 +38,7 @@ class DashboardViewModel
     fun getPopularMovies(page: Int = 1) {
 
         dashboardState.popularMoviesComponent.postLoadingState()
+
         viewModelScope.launch(Dispatchers.IO) {
 
             val languageAndRegion = async(coroutineContext) { getLanguageAndRegion() }

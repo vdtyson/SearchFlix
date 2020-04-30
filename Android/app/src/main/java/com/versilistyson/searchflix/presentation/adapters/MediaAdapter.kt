@@ -16,8 +16,8 @@ import com.versilistyson.searchflix.presentation.adapters.common.LiveDataAdapter
 
 class MediaAdapter(
     lifecycleOwner: LifecycleOwner,
-    private val onMediaItemClick: ((Media) -> Unit)? = null,
-    liveDataMediaList: MutableLiveData<List<Media>> = MutableLiveData()
+    liveDataMediaList: MutableLiveData<List<Media>> = MutableLiveData(),
+    private val onMediaItemClick: ((Media) -> Unit)? = null
 ) : LiveDataAdapter<Media, MediaAdapter.MediaHolder>(lifecycleOwner, liveDataMediaList) {
 
     init {

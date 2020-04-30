@@ -9,6 +9,7 @@ abstract class LiveDataAdapter<T, VH : BaseViewHolder<T>>(
     protected val itemListLiveData: MutableLiveData<List<T>>
 ) : BaseRecylerViewAdapter<T, VH>() {
 
+
     open val listObserver: Observer<List<T>> =
         Observer { list -> list.forEach { item -> update(list) } }
 

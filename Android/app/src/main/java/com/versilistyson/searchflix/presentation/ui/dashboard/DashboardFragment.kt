@@ -38,13 +38,13 @@ class DashboardFragment : Fragment(), DataBindingScreen<FragmentDashboardBinding
     }
 
     private val popularMoviesCategory by lazy {
-        Category("Popular Movies", viewModel.popularMoviesState) { viewModel.getPopularMovies() }
+        Category("Popular Movies", viewModel.popularMovies) { viewModel.getPopularMovies() }
     }
     private val topRatedMoviesCategory by lazy {
-        Category("Top Rated Movies", viewModel.topRatedMoviesState) { viewModel.getTopRatedMovies() }
+        Category("Top Rated Movies", viewModel.topRatedMovies) { viewModel.getTopRatedMovies() }
     }
     private val upcomingMoviesCategory by lazy {
-        Category("Upcoming Movies", viewModel.upcomingMoviesState) { viewModel.getUpcomingMovies() }
+        Category("Upcoming Movies", viewModel.upcomingMovies) { viewModel.getUpcomingMovies() }
     }
 
     override lateinit var binding: FragmentDashboardBinding
