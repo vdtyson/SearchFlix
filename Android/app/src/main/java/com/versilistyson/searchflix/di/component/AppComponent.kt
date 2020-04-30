@@ -7,6 +7,8 @@ import com.versilistyson.searchflix.presentation.ui.dashboard.DashboardFragment
 import com.versilistyson.searchflix.presentation.ui.details.MediaDetailsFragment
 import com.versilistyson.searchflix.presentation.ui.favorites.FavoritesFragment
 import com.versilistyson.searchflix.presentation.ui.search.MediaSearchFragment
+import com.versilistyson.searchflix.presentation.ui.settings.LanguageAndRegionSettingsFragment
+import com.versilistyson.searchflix.presentation.ui.settings.SettingsFragment
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,4 +41,6 @@ interface AppComponent {
     fun inject(target: DashboardFragment)
     fun inject(target: MediaSearchFragment)
     fun inject(target: FavoritesFragment)
+    fun inject(target: SettingsFragment)
+    fun inject(languageAndRegionSettingsFragment: LanguageAndRegionSettingsFragment)
 }

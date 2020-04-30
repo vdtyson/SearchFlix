@@ -20,7 +20,11 @@
         android:id="@+id/settingsFragment"
         android:name="com.versilistyson.searchflix.presentation.ui.settings.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_languageAndRegionSettingsFragment"
+            app:destination="@id/languageAndRegionSettingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.versilistyson.searchflix.presentation.ui.favorites.FavoritesFragment"
@@ -60,4 +64,8 @@
     <action
         android:id="@+id/action_global_mediaSearchFragment"
         app:destination="@id/mediaSearchFragment" />
+    <fragment
+        android:id="@+id/languageAndRegionSettingsFragment"
+        android:name="com.versilistyson.searchflix.presentation.ui.settings.LanguageAndRegionSettingsFragment"
+        android:label="LanguageAndRegionSettingsFragment" />
 </navigation>
