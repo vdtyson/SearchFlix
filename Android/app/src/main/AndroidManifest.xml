@@ -6,10 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:fullBackupContent="true"
         android:name=".di.SearchFlixApp"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_searchflix_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
