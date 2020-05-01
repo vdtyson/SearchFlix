@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
@@ -70,25 +72,39 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.bttnExpandOverview.setOnClickListener {
+            val toSummaryDialogFragment =
+                MediaDetailsFragmentDirections.actionMediaDetailsFragmentToSummaryDialogFragment(
+                    args.media.summary
+                )
+            findNavController().navigate(toSummaryDialogFragment)
+        }
+
         viewModel.getIsFavoriteFlow(args.media.id)
         viewModel.isFavorited.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer(::renderIsFavorited)
         )
 
-        requireActivity().toolbar.setOnMenuItemClickListener {menuItem ->
-            if (menuItem.itemId == R.id.menu_item_favorite) {
-                val movie = args.media as Media.Movie
-                when(viewModel.isFavorited.value) {
-                    true -> {
-                        viewModel.persistMovie(movie.copy(isFavorite = false))
-                        Toast.makeText(context, "Unfavorited!", Toast.LENGTH_SHORT).show()
+        requireActivity().toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+
+                R.id.menu_item_favorite -> {
+
+
+                    val movie = args.media as Media.Movie
+                    when (viewModel.isFavorited.value) {
+                        true -> {
+                            viewModel.persistMovie(movie.copy(isFavorite = false))
+                            Toast.makeText(context, "Unfavorited!", Toast.LENGTH_SHORT).show()
+                        }
+
+                        else -> {
+                            viewModel.persistMovie(movie.copy(isFavorite = true))
+                            Toast.makeText(context, "Favorited!", Toast.LENGTH_SHORT).show()
+                        }
                     }
 
-                    else -> {
-                        viewModel.persistMovie(movie.copy(isFavorite = true))
-                        Toast.makeText(context, "Favorited!", Toast.LENGTH_SHORT).show()
-                    }
                 }
 
             }
@@ -120,7 +136,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     }
 
     private fun renderIsFavorited(isFavorited: Boolean) {
-        when(isFavorited) {
+        when (isFavorited) {
             true -> {
                 requireActivity().toolbar
                     .menu.findItem(R.id.menu_item_favorite)
@@ -134,6 +150,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             }
         }
     }
+
     private fun renderState() {
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,

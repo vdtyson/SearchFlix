@@ -18,6 +18,7 @@ import com.versilistyson.searchflix.domain.entities.MediaType
 import com.versilistyson.searchflix.presentation.ui.common.activity.BaseActivity
 import com.versilistyson.searchflix.presentation.ui.common.activity.DataBindingScreen
 import com.versilistyson.searchflix.presentation.util.clearMenu
+import com.versilistyson.searchflix.presentation.util.setMenuItemVisibility
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
@@ -83,17 +84,26 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.dashboardFragment -> {
+                    menuItemClickListener()
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_daynight, true)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_favorite, false)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, true)
                 }
 
-                R.id.mediaDetailsFragment -> {
+                R.id.mediaDetailsFragment  -> {
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_daynight, false)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, false)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_favorite, true)
                     if (binding.searchView.isOpen) binding.searchView.closeSearch()
                 }
 
+                R.id.summaryDialogFragment -> {
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_daynight, false)
+                }
+
                 else -> {
+                    menuItemClickListener()
+                    binding.toolbar.setMenuItemVisibility(R.id.menu_item_daynight, true)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_favorite, false)
                     binding.toolbar.setMenuItemVisibility(R.id.menu_item_search, false)
                     if(binding.searchView.isOpen) binding.searchView.closeSearch()
@@ -102,9 +112,7 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         }
     }
 
-    private fun MaterialToolbar.setMenuItemVisibility(id: Int, isVisible: Boolean) {
-        menu.findItem(id).isVisible = isVisible
-    }
+
 
     private fun setupBottomNavBar() {
         binding.bottomNav.setupWithNavController(navController)
@@ -113,12 +121,7 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         }
     }
 
-    private fun setupToolBar() {
-        binding.toolbar.menu.clearMenu()
-        binding.toolbar.inflateMenu(R.menu.menu_toolbar_dashboard)
-
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-
+    private fun menuItemClickListener() {
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
 
@@ -147,6 +150,14 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
             }
             true
         }
+    }
+    private fun setupToolBar() {
+        binding.toolbar.menu.clearMenu()
+        binding.toolbar.inflateMenu(R.menu.menu_toolbar_dashboard)
+
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+
+
     }
 
     override fun onBackPressed() {
