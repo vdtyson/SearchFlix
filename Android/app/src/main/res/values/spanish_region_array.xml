@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spanish_region_array">
+        <item>All Regions</item>
         <item>Mexico</item>
         <item>Spain</item>
         <item>Colombia</item>

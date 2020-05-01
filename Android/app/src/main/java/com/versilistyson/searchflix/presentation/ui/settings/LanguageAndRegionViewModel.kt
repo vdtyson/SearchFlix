@@ -16,27 +16,9 @@ import javax.inject.Inject
 class LanguageAndRegionViewModel
 @Inject constructor(private val prefManager: SharedPrefManager) : ViewModel() {
 
-    private val settingsState by lazy {
-        SettingsState()
-    }
-
-    val currentLanguageAndRegion: LiveData<String>
-        get() = settingsState.currentLanguageAndRegionComponent
-
-    private fun getCurrentRegion() {
-        viewModelScope.launch(Dispatchers.Main) {
-            val languageAndRegion = async(Dispatchers.IO) {
-                prefManager.fetchLanguageAndRegion() ?: "en-US"
-            }
-            settingsState.currentLanguageAndRegionComponent.postValue(languageAndRegion.await())
-        }
-    }
-
-    private fun changeLanguageAndRegion(language: Language, region: Region? = null) {
+    fun changeLanguageAndRegion(language: Language, region: Region?) {
         viewModelScope.launch(Dispatchers.IO) {
-            prefManager.setLanguageAndRegion(language,region)
-        }.invokeOnCompletion {
-            getCurrentRegion()
+            prefManager.setLanguageAndRegion(language, region)
         }
     }
 }

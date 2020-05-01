@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="english_region_array">
+        <item>All Regions</item>
         <item>United States</item>
         <item>United Kingdom</item>
     </string-array>

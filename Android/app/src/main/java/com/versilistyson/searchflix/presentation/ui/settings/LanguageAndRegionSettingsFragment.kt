@@ -5,12 +5,17 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.FragmentLanguageRegionBinding
 import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
 import com.versilistyson.searchflix.di.util.activityInjector
+import com.versilistyson.searchflix.domain.entities.Language
+import com.versilistyson.searchflix.domain.entities.Region
 import com.versilistyson.searchflix.presentation.ui.common.fragment.BindedFragment
+import com.versilistyson.searchflix.presentation.util.showToast
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -39,6 +44,61 @@ class LanguageAndRegionSettingsFragment : BindedFragment<FragmentLanguageRegionB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupSpinners()
+        setupSaveButton()
+    }
+
+    private fun setupSaveButton() {
+        binding.bttnSaveLanguageAndRegion.setOnClickListener {
+            val languageText = binding.spinnerLanguage.selectedItem.toString()
+            val regionText = binding.spinnerRegion.selectedItem.toString()
+            var region: Region? = null
+
+            val language = when(languageText) {
+                "English" -> {
+                    Language.ENGLISH
+                }
+
+                "Spanish" -> {
+                    Language.SPANISH
+
+                }
+
+                else -> {
+                    Language.ENGLISH
+                }
+            }
+
+            if(regionText != "All Regions") {
+                when(regionText) {
+                    "Mexico" -> {
+                        region = Region.MEXICO
+                    }
+
+                    "Spain" -> {
+                        region = Region.SPAIN
+                    }
+
+                    "Colombia" -> {
+                        region = Region.COLOMBIA
+                    }
+
+                    "Argentina" -> {
+                        region = Region.ARGENTINA
+                    }
+
+                    "United States" -> {
+                        region = Region.UNITED_STATES
+                    }
+
+                    "United Kingdom" -> {
+                        region = Region.UNITED_KINGDOM
+                    }
+                }
+            }
+            showToast("language: ${language.code} region: ${region?.code ?: "any"}")
+            viewmodel.changeLanguageAndRegion(language, region)
+
+        }
     }
 
     private fun setupSpinners() {

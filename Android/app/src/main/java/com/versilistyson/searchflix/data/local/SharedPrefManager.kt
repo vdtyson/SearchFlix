@@ -25,14 +25,13 @@ class SharedPrefManager
         sharedPref.edit()
     }
 
-    fun setLanguageAndRegion(language: Language, region: Region? = null) {
-        val languageAndRegion =
-            when (region) {
+    fun setLanguageAndRegion(language: Language, region: Region?) {
 
-                null -> language.code
+        var languageAndRegion = language.code
 
-                else -> "${language.code}-${region.code}"
-            }
+       if(region != null) {
+           languageAndRegion = "$languageAndRegion-${region.code}"
+       }
 
         sharedPrefEditor
             .putString(SharedPrefKeys.LANGUAGE_AND_REGION.KEY, languageAndRegion)
