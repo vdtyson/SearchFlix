@@ -67,5 +67,9 @@
     <fragment
         android:id="@+id/languageAndRegionSettingsFragment"
         android:name="com.versilistyson.searchflix.presentation.ui.settings.LanguageAndRegionSettingsFragment"
-        android:label="LanguageAndRegionSettingsFragment" />
+        android:label="Language And Region">
+        <action
+            android:id="@+id/action_languageAndRegionSettingsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
 </navigation>

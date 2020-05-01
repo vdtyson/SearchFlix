@@ -6,6 +6,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.FragmentLanguageRegionBinding
 import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
@@ -97,8 +98,15 @@ class LanguageAndRegionSettingsFragment : BindedFragment<FragmentLanguageRegionB
             }
             showToast("language: ${language.code} region: ${region?.code ?: "any"}")
             viewmodel.changeLanguageAndRegion(language, region)
-
+            navigateToSettings()
         }
+    }
+
+    private fun navigateToSettings() {
+        val toSettingsFragment =
+            LanguageAndRegionSettingsFragmentDirections.actionLanguageAndRegionSettingsFragmentToSettingsFragment()
+
+        findNavController().navigate(toSettingsFragment)
     }
 
     private fun setupSpinners() {
