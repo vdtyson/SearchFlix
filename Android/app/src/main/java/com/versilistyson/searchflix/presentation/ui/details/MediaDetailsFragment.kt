@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.data.util.NetworkConstants
@@ -23,8 +24,10 @@ import com.versilistyson.searchflix.di.util.activityInjector
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.StreamingServiceAdapter
 import com.versilistyson.searchflix.presentation.ui.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.util.showToast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -37,6 +40,9 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
 
     @Inject
     lateinit var daggerViewModelFactory: DaggerViewModelFactory
+
+    @Inject
+    lateinit var crashlytics: FirebaseCrashlytics
 
     private val viewModel: MediaDetailsViewModel by viewModels {
         daggerViewModelFactory
@@ -226,9 +232,14 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             null -> binding.tvReleaseYear.text = ""
 
             else -> {
-                val calendar = GregorianCalendar()
-                calendar.time = parsedReleaseDate
-                binding.tvReleaseYear.text = calendar.get(Calendar.YEAR).toString()
+                try {
+                    val calendar = GregorianCalendar()
+                    calendar.time = parsedReleaseDate
+                    binding.tvReleaseYear.text = calendar.get(Calendar.YEAR).toString()
+                } catch(e: ParseException) {
+                    crashlytics.recordException(e)
+                    binding.tvReleaseYear.text = getString(R.string.date_not_found)
+                }
             }
         }
     }

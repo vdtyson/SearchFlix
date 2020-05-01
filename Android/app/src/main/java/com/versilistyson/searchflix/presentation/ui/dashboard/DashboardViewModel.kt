@@ -3,6 +3,7 @@ package com.versilistyson.searchflix.presentation.ui.dashboard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.versilistyson.searchflix.data.local.SharedPrefManager
 import com.versilistyson.searchflix.data.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +49,9 @@ class DashboardViewModel
 
             withContext(Dispatchers.Main) {
                 result.await().fold(
-                    { failure -> dashboardState.popularMoviesComponent.postErrorState(failure) },
+                    { failure ->
+                        dashboardState.popularMoviesComponent.postErrorState(failure)
+                    },
                     { moviePagedResponse ->
                         dashboardState.popularMoviesComponent.postDataState(moviePagedResponse.results)
                     }
@@ -91,7 +94,9 @@ class DashboardViewModel
 
             withContext(Dispatchers.Main) {
                 result.await().fold(
-                    { failure -> dashboardState.topRatedMoviesComponent.postErrorState(failure) },
+                    { failure ->
+                        dashboardState.topRatedMoviesComponent.postErrorState(failure)
+                    },
                     {moviePagedResponse ->
                         dashboardState.topRatedMoviesComponent.postDataState(moviePagedResponse.results)
                     }

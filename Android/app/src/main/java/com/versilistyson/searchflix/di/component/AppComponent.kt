@@ -25,7 +25,8 @@ import javax.inject.Singleton
         NetworkingModule::class,
         ServiceModule::class,
         AssistedInjectModule::class,
-        RoomModule::class
+        RoomModule::class,
+        FirebaseModule::class
     ]
 )
 interface AppComponent {
