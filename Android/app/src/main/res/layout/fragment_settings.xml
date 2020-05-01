@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.settings.SettingsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.ui.settings.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginStart="64dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/bttnLanguageAndRegion"
+            android:text="Language and Region"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"
+            android:textAlignment="viewStart"
+            android:id="@+id/tvCurrentLanguage"
+            app:layout_constraintTop_toBottomOf="@id/bttnLanguageAndRegion"
+            app:layout_constraintStart_toStartOf="@id/bttnLanguageAndRegion"
+            android:text="en-US"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-</FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

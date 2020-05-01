@@ -1,7 +1,8 @@
 package com.versilistyson.searchflix.presentation
 
+import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -14,8 +15,8 @@ import com.versilistyson.searchflix.NavGraphMainDirections
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.ActivityMainBinding
 import com.versilistyson.searchflix.domain.entities.MediaType
-import com.versilistyson.searchflix.presentation.common.activity.BaseActivity
-import com.versilistyson.searchflix.presentation.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.ui.common.activity.BaseActivity
+import com.versilistyson.searchflix.presentation.ui.common.activity.DataBindingScreen
 import com.versilistyson.searchflix.presentation.util.clearMenu
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
@@ -120,8 +121,28 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+
                 R.id.menu_item_search -> {
                     binding.searchView.openSearch()
+                }
+
+                R.id.menu_item_daynight -> {
+
+                    when {
+                        item.isChecked -> {
+                            item.isChecked = false
+                            AppCompatDelegate.setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_NO
+                            )
+                        }
+
+                        else -> {
+                            AppCompatDelegate.setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_YES
+                            )
+                            item.isChecked = true
+                        }
+                    }
                 }
             }
             true

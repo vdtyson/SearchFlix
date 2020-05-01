@@ -7,85 +7,87 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.domain.entities.Category
 import com.versilistyson.searchflix.domain.entities.Media
-import com.versilistyson.searchflix.presentation.dashboard.MediaListStateComponent
+import com.versilistyson.searchflix.presentation.adapters.common.BaseRecylerViewAdapter
+import com.versilistyson.searchflix.presentation.adapters.common.BaseViewHolder
+import com.versilistyson.searchflix.presentation.ui.dashboard.MediaListStateComponent
+import kotlinx.coroutines.launch
 
 class CategoryAdapter(
     private val lifecycleOwner: LifecycleOwner,
-    private val categories: List<Category>,
-    private val onCategoryTitleClickListener: View.OnClickListener? = null,
+    categories: List<Category>,
+    private val onCategoryTitleClick: ((category: Category) -> Unit)? = null,
     val onMediaItemClick: ((Media) -> Unit)? = null
-): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+) : BaseRecylerViewAdapter<Category, CategoryAdapter.CategoryViewHolder>(categories) {
 
 
-    inner class CategoryViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class CategoryViewHolder(view: View) : BaseViewHolder<Category>(view) {
 
         private val title: TextView = view.findViewById(R.id.categoryTitle)
         private val innerRecyclerView: RecyclerView = view.findViewById(R.id.recyclerViewMedia)
         private val progressBarCategory: ProgressBar = view.findViewById(R.id.progressBarCategory)
-        private val tvCategoryContentNotAvailable: TextView = view.findViewById(R.id.tvCategoryContentNotAvailable)
-
-        private val mediaAdapter = MediaAdapter(lifecycleOwner, onMediaItemClick)
+        private val tvCategoryContentNotAvailable: TextView =
+            view.findViewById(R.id.tvCategoryContentNotAvailable)
+        private val mediaAdapter = MediaAdapter(lifecycleOwner, onMediaItemClick = onMediaItemClick)
 
         init {
             innerRecyclerView.layoutManager = provideInnerLayoutManager(view)
-
-            onCategoryTitleClickListener?.let {
-                title.setOnClickListener(onCategoryTitleClickListener)
-            }
         }
 
-        fun bindTo(category: Category) {
-
-            category.fetchMedia()
-
+        override fun bindTo(obj: Category) {
             innerRecyclerView.adapter = mediaAdapter
-
-            render(category)
-
-            title.text = category.title
-
+            obj.fetchMedia()
+            render(obj)
+            title.text = obj.title
+            onCategoryTitleClick?.let { onClick ->
+                title.setOnClickListener {
+                    onClick(obj)
+                }
+            }
         }
 
         private fun render(category: Category) {
             category.mediaListState.observe(
                 lifecycleOwner,
                 Observer {latestState ->
-                    when(latestState) {
+                    lifecycleOwner.lifecycleScope.launch {
+                        when (latestState) {
 
-                        is MediaListStateComponent.Loading -> {
-                            progressBarCategory.visibility = View.VISIBLE
-                            tvCategoryContentNotAvailable.visibility = View.GONE
-                            innerRecyclerView.visibility = View.GONE
-                        }
-
-                        is MediaListStateComponent.Error -> {
-                            //TODO: Handle Errors
-                        }
-
-                        is MediaListStateComponent.Data -> {
-
-                            progressBarCategory.visibility = View.GONE
-
-                            when {
-                                latestState.value.isNotEmpty() -> {
-                                    tvCategoryContentNotAvailable.visibility = View.GONE
-                                    innerRecyclerView.visibility = View.VISIBLE
-                                }
-
-                                else -> {
-                                    tvCategoryContentNotAvailable.visibility = View.VISIBLE
-                                    innerRecyclerView.visibility = View.GONE
-                                }
+                            is MediaListStateComponent.Loading -> {
+                                progressBarCategory.visibility = View.VISIBLE
+                                tvCategoryContentNotAvailable.visibility = View.GONE
+                                innerRecyclerView.visibility = View.GONE
                             }
 
-                            mediaAdapter.liveDataMediaList.postValue(latestState.value)
+                            is MediaListStateComponent.Error -> {
+                                //TODO: Handle Errors
+                            }
+
+                            is MediaListStateComponent.Data -> {
+
+                                progressBarCategory.visibility = View.GONE
+
+                                when {
+                                    latestState.value.isNotEmpty() -> {
+                                        tvCategoryContentNotAvailable.visibility = View.GONE
+                                        innerRecyclerView.visibility = View.VISIBLE
+                                    }
+
+                                    else -> {
+                                        tvCategoryContentNotAvailable.visibility = View.VISIBLE
+                                        innerRecyclerView.visibility = View.GONE
+                                    }
+                                }
+                                mediaAdapter.postValue(latestState.value)
+                            }
                         }
                     }
+
                 }
             )
         }
@@ -95,18 +97,10 @@ class CategoryAdapter(
         parent: ViewGroup,
         viewType: Int
     ): CategoryAdapter.CategoryViewHolder {
-
         val inflatedLayout =
             LayoutInflater.from(parent.context).inflate(R.layout.list_item_category, parent, false)
+
         return CategoryViewHolder(inflatedLayout)
-    }
-
-    override fun getItemCount(): Int = categories.size
-
-    override fun onBindViewHolder(holder: CategoryAdapter.CategoryViewHolder, position: Int) {
-
-        val category = categories[position]
-        holder.bindTo(category)
     }
 
     private fun provideInnerLayoutManager(view: View) =

@@ -11,4 +11,10 @@
         android:icon="@drawable/ic_favorite_border_black_24dp"
         android:title="Favorite"
         app:showAsAction="ifRoom"/>
+    <item
+        android:checkable="true"
+        app:showAsAction="never"
+        android:id="@+id/menu_item_daynight"
+        android:icon="@drawable/ic_brightness_2_black_24dp"
+        android:title="Night Mode"/>
 </menu>
