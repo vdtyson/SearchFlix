@@ -1,63 +1,110 @@
 package com.versilistyson.searchflix.presentation.ui.settings
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.fragment.app.viewModels
 import com.versilistyson.searchflix.R
+import com.versilistyson.searchflix.databinding.FragmentLanguageRegionBinding
+import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
+import com.versilistyson.searchflix.di.util.activityInjector
+import com.versilistyson.searchflix.presentation.ui.common.fragment.BindedFragment
+import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LanguageAndRegionSettingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class LanguageAndRegionSettingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class LanguageAndRegionSettingsFragment : BindedFragment<FragmentLanguageRegionBinding>() {
 
+    override val layoutId: Int = R.layout.fragment_language_region
+
+    @Inject
+    lateinit var daggerViewModelFactory: DaggerViewModelFactory
+
+    private val viewmodel: LanguageAndRegionViewModel by viewModels {
+        daggerViewModelFactory
+    }
+
+    var languageAdapter: ArrayAdapter<CharSequence>? = null
+    var spanishRegionAdapter: ArrayAdapter<CharSequence>? = null
+    var englishRegionAdaper: ArrayAdapter<CharSequence>? = null
+
+    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityInjector.inject(this)
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return TextView(activity).apply {
-            setText(R.string.hello_blank_fragment)
-        }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupSpinners()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LanguageAndRegionSettingsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LanguageAndRegionSettingsFragment()
-                .apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun setupSpinners() {
+
+        initSpanishRegionAdapter()
+        initEnglishRegionAdapter()
+        initLanguageSpinnerAdapter()
+
+        binding.spinnerLanguage.adapter = languageAdapter
+        binding.spinnerLanguage.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    binding.spinnerRegion.visibility = View.GONE
                 }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    binding.spinnerRegion.visibility = View.VISIBLE
+
+                    when (parent?.getItemAtPosition(position).toString()) {
+                        "English" -> {
+                            binding.spinnerRegion.adapter = englishRegionAdaper
+                        }
+
+                        "Spanish" -> {
+                            binding.spinnerRegion.adapter = spanishRegionAdapter
+                        }
+                    }
+                }
+
             }
     }
+
+    private fun initLanguageSpinnerAdapter() {
+        languageAdapter = context?.let {
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.language_array,
+                android.R.layout.simple_spinner_item
+            )
+        }
+    }
+
+    private fun initEnglishRegionAdapter() {
+        englishRegionAdaper = context?.let {
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.english_region_array,
+                android.R.layout.simple_spinner_item
+            )
+        }
+    }
+
+    private fun initSpanishRegionAdapter() {
+        spanishRegionAdapter = context?.let {
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.spanish_region_array,
+                android.R.layout.simple_spinner_item
+            )
+        }
+    }
+
+
 }

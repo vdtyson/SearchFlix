@@ -1,6 +1,8 @@
 package com.versilistyson.searchflix.presentation
 
+import android.content.res.Configuration
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -119,8 +121,28 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+
                 R.id.menu_item_search -> {
                     binding.searchView.openSearch()
+                }
+
+                R.id.menu_item_daynight -> {
+
+                    when {
+                        item.isChecked -> {
+                            item.isChecked = false
+                            AppCompatDelegate.setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_NO
+                            )
+                        }
+
+                        else -> {
+                            AppCompatDelegate.setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_YES
+                            )
+                            item.isChecked = true
+                        }
+                    }
                 }
             }
             true
