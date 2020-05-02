@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.data.util.NetworkConstants
@@ -21,8 +24,10 @@ import com.versilistyson.searchflix.di.util.activityInjector
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.presentation.adapters.StreamingServiceAdapter
 import com.versilistyson.searchflix.presentation.ui.common.activity.DataBindingScreen
+import com.versilistyson.searchflix.presentation.util.showToast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -35,6 +40,9 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
 
     @Inject
     lateinit var daggerViewModelFactory: DaggerViewModelFactory
+
+    @Inject
+    lateinit var crashlytics: FirebaseCrashlytics
 
     private val viewModel: MediaDetailsViewModel by viewModels {
         daggerViewModelFactory
@@ -70,25 +78,39 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.bttnExpandOverview.setOnClickListener {
+            val toSummaryDialogFragment =
+                MediaDetailsFragmentDirections.actionMediaDetailsFragmentToSummaryDialogFragment(
+                    args.media.summary
+                )
+            findNavController().navigate(toSummaryDialogFragment)
+        }
+
         viewModel.getIsFavoriteFlow(args.media.id)
         viewModel.isFavorited.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer(::renderIsFavorited)
         )
 
-        requireActivity().toolbar.setOnMenuItemClickListener {menuItem ->
-            if (menuItem.itemId == R.id.menu_item_favorite) {
-                val movie = args.media as Media.Movie
-                when(viewModel.isFavorited.value) {
-                    true -> {
-                        viewModel.persistMovie(movie.copy(isFavorite = false))
-                        Toast.makeText(context, "Unfavorited!", Toast.LENGTH_SHORT).show()
+        requireActivity().toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+
+                R.id.menu_item_favorite -> {
+
+
+                    val movie = args.media as Media.Movie
+                    when (viewModel.isFavorited.value) {
+                        true -> {
+                            viewModel.persistMovie(movie.copy(isFavorite = false))
+                            Toast.makeText(context, "Unfavorited!", Toast.LENGTH_SHORT).show()
+                        }
+
+                        else -> {
+                            viewModel.persistMovie(movie.copy(isFavorite = true))
+                            Toast.makeText(context, "Favorited!", Toast.LENGTH_SHORT).show()
+                        }
                     }
 
-                    else -> {
-                        viewModel.persistMovie(movie.copy(isFavorite = true))
-                        Toast.makeText(context, "Favorited!", Toast.LENGTH_SHORT).show()
-                    }
                 }
 
             }
@@ -120,7 +142,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
     }
 
     private fun renderIsFavorited(isFavorited: Boolean) {
-        when(isFavorited) {
+        when (isFavorited) {
             true -> {
                 requireActivity().toolbar
                     .menu.findItem(R.id.menu_item_favorite)
@@ -134,6 +156,7 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             }
         }
     }
+
     private fun renderState() {
         viewModel.mediaDetailsState.observe(
             viewLifecycleOwner,
@@ -209,9 +232,14 @@ class MediaDetailsFragment : Fragment(), DataBindingScreen<FragmentMediaDetailsB
             null -> binding.tvReleaseYear.text = ""
 
             else -> {
-                val calendar = GregorianCalendar()
-                calendar.time = parsedReleaseDate
-                binding.tvReleaseYear.text = calendar.get(Calendar.YEAR).toString()
+                try {
+                    val calendar = GregorianCalendar()
+                    calendar.time = parsedReleaseDate
+                    binding.tvReleaseYear.text = calendar.get(Calendar.YEAR).toString()
+                } catch(e: ParseException) {
+                    crashlytics.recordException(e)
+                    binding.tvReleaseYear.text = getString(R.string.date_not_found)
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.data.util.NetworkConstants
 import com.versilistyson.searchflix.domain.entities.Media
+import com.versilistyson.searchflix.presentation.util.setImageWithPicasso
 
 class FavoritesAdapter(
     lifecycleOwner: LifecycleOwner,
@@ -43,11 +44,7 @@ class FavoritesAdapter(
             ratingsBar.rating = (mediaItem.movieVoteAverage.toFloat()) / 2
             tvMediaReleaseYear.text = mediaItem.movieReleaseDate
             tvMediaTitle.text = mediaItem.title
-
-            if (mediaItem.posterPath.isNotBlank()) Picasso.get()
-                .load(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + mediaItem.posterPath)
-                .into(ivSearchPoster)
-
+            ivSearchPoster.setImageWithPicasso(NetworkConstants.TMDB_DEFAULT_IMAGE_BASE_URL + mediaItem.posterPath)
             onMediaItemClick?.let { fn -> view.setOnClickListener { fn(mediaItem) } }
 
         }
