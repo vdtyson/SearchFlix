@@ -16,6 +16,7 @@ import com.versilistyson.searchflix.domain.exception.Failure
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
@@ -146,6 +147,26 @@ class MovieRepositoryTest {
 
             // THEN
             favoritesFlow.collect { actual ->
+                Assertions.assertEquals(expected, actual)
+            }
+        }
+    }
+
+    @Test
+    fun `getFlowOfIsFavorite() should return true`() {
+
+        runBlockingTest() {
+            // GIVEN
+            val expected = true
+
+            whenever(movieLocalSourceMock.getIsFavoriteByMediaId(1))
+                .thenReturn(flowOf(true))
+
+            // WHEN
+            val isFavoriteFlow = movieRepo.getFlowOfIsFavorite(1)
+
+            // THEN
+            isFavoriteFlow.collect {actual ->
                 Assertions.assertEquals(expected, actual)
             }
         }
