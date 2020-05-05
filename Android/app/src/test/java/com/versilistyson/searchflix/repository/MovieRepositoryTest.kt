@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.versilistyson.searchflix.data.datasource.movie.MovieLocalSource
 import com.versilistyson.searchflix.data.datasource.movie.MovieRemoteSource
+import com.versilistyson.searchflix.data.local.model.MediaData
 import com.versilistyson.searchflix.data.remote.dto.MovieDto
 import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
 import com.versilistyson.searchflix.data.repository.MovieRepository
@@ -12,10 +13,14 @@ import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.entities.Media
 import com.versilistyson.searchflix.domain.entities.MediaPagedResponse
 import com.versilistyson.searchflix.domain.exception.Failure
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 
+@ExperimentalCoroutinesApi
 class MovieRepositoryTest {
 
     companion object {
@@ -41,6 +46,25 @@ class MovieRepositoryTest {
                     )
                 )
             )
+
+        private val testMovieFavoritedMediaData = MediaData(
+            mediaId = 0L,
+            title = "",
+            overview = "",
+            releaseDate = "",
+            posterPath = "",
+            backdropPath = "",
+            voteAverage = 1.0,
+            voteCount = 300,
+            isFavorite = true,
+            type = "MOVIE"
+        )
+
+        private val testMediaDataList = listOf(
+            testMovieFavoritedMediaData,
+            testMovieFavoritedMediaData,
+            testMovieFavoritedMediaData
+        )
     }
 
     private val movieLocalSourceMock: MovieLocalSource = mock()
@@ -50,7 +74,7 @@ class MovieRepositoryTest {
     @Test
     fun `getPopularMovies() should properly return failure`() {
 
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val expected = Either.Left(Failure.ServerError())
 
@@ -69,7 +93,7 @@ class MovieRepositoryTest {
     @Test
     fun `getPopularMovies() should properly handle empty NetworkResult`() {
 
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val expected = Either.Right(MediaPagedResponse.MoviePagedResponse())
 
@@ -88,7 +112,7 @@ class MovieRepositoryTest {
     @Test
     fun `getPopularMovies() should properly handle NetworkResult with data and list of movies`() {
 
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val expected =
                 Either.Right(testMoviePagedResponseDto.mapToEntity())
@@ -102,6 +126,28 @@ class MovieRepositoryTest {
 
             // THEN
             Assertions.assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun `getFavoriteMoviesFlow() should properly stream movie list`() {
+
+        runBlockingTest {
+            // GIVEN
+            val expected = testMediaDataList.map {mediaData ->
+                mediaData.mapToEntity()
+            }
+
+            whenever(movieLocalSourceMock.getMovieFavoritesFlow())
+                .thenReturn(flowOf(testMediaDataList))
+
+            // WHEN
+            val favoritesFlow: Flow<List<Media>> = movieRepo.getFavoriteMoviesFlow()
+
+            // THEN
+            favoritesFlow.collect { actual ->
+                Assertions.assertEquals(expected, actual)
+            }
         }
     }
 }
