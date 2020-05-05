@@ -15,7 +15,7 @@ object NetworkResponse {
 
             else -> {
                 Either.Left(
-                    Failure.ServerError(response.code(), response.message() ?: "Unknown Error")
+                    Failure.ServerError(response.code(), response.errorBody().toString())
                 )
             }
         }
