@@ -1,4 +1,4 @@
-package com.versilistyson.searchflix.repository
+package com.versilistyson.searchflix.data.repository
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -7,7 +7,6 @@ import com.versilistyson.searchflix.data.datasource.movie.MovieRemoteSource
 import com.versilistyson.searchflix.data.local.model.MediaData
 import com.versilistyson.searchflix.data.remote.dto.MovieDto
 import com.versilistyson.searchflix.data.remote.dto.MoviePagedResponseDto
-import com.versilistyson.searchflix.data.repository.MovieRepository
 import com.versilistyson.searchflix.data.util.NetworkResult
 import com.versilistyson.searchflix.domain.common.Either
 import com.versilistyson.searchflix.domain.entities.Media
@@ -15,8 +14,6 @@ import com.versilistyson.searchflix.domain.entities.MediaPagedResponse
 import com.versilistyson.searchflix.domain.exception.Failure
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
