@@ -2,7 +2,7 @@ package com.versilistyson.searchflix.di.component
 
 import android.app.Application
 import com.versilistyson.searchflix.di.module.*
-import com.versilistyson.searchflix.presentation.MainActivity
+import com.versilistyson.searchflix.presentation.ui.MainActivity
 import com.versilistyson.searchflix.presentation.ui.dashboard.DashboardFragment
 import com.versilistyson.searchflix.presentation.ui.details.MediaDetailsFragment
 import com.versilistyson.searchflix.presentation.ui.favorites.FavoritesFragment

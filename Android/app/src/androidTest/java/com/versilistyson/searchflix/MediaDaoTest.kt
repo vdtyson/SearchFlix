@@ -51,10 +51,9 @@ class MediaDaoTest {
                 AndroidTestUtil.createMediaData(6, false)
             )
             val expected = listOf(mediaDataList[0], mediaDataList[2], mediaDataList[4])
-            val favoriteMediaFlow: Flow<List<MediaData>>
             // WHEN
             mediaDao.insert(*mediaDataList)
-            favoriteMediaFlow = mediaDao.getFavoriteMedia()
+            val favoriteMediaFlow: Flow<List<MediaData>> = mediaDao.getFavoriteMedia()
             // THEN
             favoriteMediaFlow.collect { actual ->
                 assertEquals(expected, actual)

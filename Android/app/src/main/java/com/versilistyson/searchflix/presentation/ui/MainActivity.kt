@@ -1,26 +1,37 @@
-package com.versilistyson.searchflix.presentation
+package com.versilistyson.searchflix.presentation.ui
 
-import android.content.res.Configuration
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import br.com.mauker.materialsearchview.MaterialSearchView
-import com.google.android.material.appbar.MaterialToolbar
 import com.versilistyson.searchflix.NavGraphMainDirections
 import com.versilistyson.searchflix.R
 import com.versilistyson.searchflix.databinding.ActivityMainBinding
+import com.versilistyson.searchflix.di.util.DaggerViewModelFactory
+import com.versilistyson.searchflix.di.util.injector
 import com.versilistyson.searchflix.domain.entities.MediaType
 import com.versilistyson.searchflix.presentation.ui.common.activity.BaseActivity
 import com.versilistyson.searchflix.presentation.ui.common.activity.DataBindingScreen
 import com.versilistyson.searchflix.presentation.util.clearMenu
 import com.versilistyson.searchflix.presentation.util.setMenuItemVisibility
+import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
 
 class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
+
+    @Inject lateinit var daggerViewModelFactory: DaggerViewModelFactory
+
+    private val viewModel: MainViewModel by viewModels{
+        daggerViewModelFactory
+    }
 
     override lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -60,7 +71,9 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
         }
 
+    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -70,6 +83,15 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         super.onStart()
         setupNavigation()
         setupSearchView()
+        viewModel.dayNightTheme.observe(this, Observer { renderDayNightIcon(it) })
+    }
+
+    private fun renderDayNightIcon(currentTheme: Int) {
+        val dayNightMenuItem = binding.toolbar.menu.findItem(R.id.menu_item_daynight)
+        when(currentTheme) {
+            AppCompatDelegate.MODE_NIGHT_YES -> dayNightMenuItem.isChecked = true
+            else -> dayNightMenuItem.isChecked = false
+        }
     }
 
     private fun setupNavigation() {
@@ -133,17 +155,13 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
 
                     when {
                         item.isChecked -> {
-                            item.isChecked = false
-                            AppCompatDelegate.setDefaultNightMode(
-                                AppCompatDelegate.MODE_NIGHT_NO
-                            )
+                            viewModel.setDayNightTheme(AppCompatDelegate.MODE_NIGHT_NO)
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                         }
 
                         else -> {
-                            AppCompatDelegate.setDefaultNightMode(
-                                AppCompatDelegate.MODE_NIGHT_YES
-                            )
-                            item.isChecked = true
+                            viewModel.setDayNightTheme(AppCompatDelegate.MODE_NIGHT_YES)
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                         }
                     }
                 }
