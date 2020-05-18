@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -83,14 +82,21 @@ class MainActivity : BaseActivity(), DataBindingScreen<ActivityMainBinding> {
         super.onStart()
         setupNavigation()
         setupSearchView()
-        viewModel.dayNightTheme.observe(this, Observer { renderDayNightIcon(it) })
+        viewModel.dayNightTheme.observe(this, Observer { renderDayNight(it) })
     }
 
-    private fun renderDayNightIcon(currentTheme: Int) {
+    private fun renderDayNight(currentTheme: Int) {
+        val searchMenuItem = binding.toolbar.menu.findItem(R.id.menu_item_search)
         val dayNightMenuItem = binding.toolbar.menu.findItem(R.id.menu_item_daynight)
         when(currentTheme) {
-            AppCompatDelegate.MODE_NIGHT_YES -> dayNightMenuItem.isChecked = true
-            else -> dayNightMenuItem.isChecked = false
+            AppCompatDelegate.MODE_NIGHT_YES -> {
+                searchMenuItem.setIcon(R.drawable.ic_toolbar_search_light)
+                dayNightMenuItem.isChecked = true
+            }
+            else -> {
+                searchMenuItem.setIcon(R.drawable.ic_toolbar_search_dark)
+                dayNightMenuItem.isChecked = false
+            }
         }
     }
 
