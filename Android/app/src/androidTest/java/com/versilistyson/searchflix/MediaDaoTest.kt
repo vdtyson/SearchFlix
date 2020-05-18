@@ -80,7 +80,7 @@ class MediaDaoTest {
     }
 
     @Test
-    fun flowShouldShowFavoritesBeingUpdated() {
+    fun shouldUpdateFavoritesProperly() {
         runBlocking {
             // GIVEN
             val expected = listOf(null, false, true, false)
