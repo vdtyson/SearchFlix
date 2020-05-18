@@ -20,7 +20,7 @@
             android:protectionLevel="signature"
             android:syncable="true" />
 
-        <activity android:name=".presentation.MainActivity">
+        <activity android:name=".presentation.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

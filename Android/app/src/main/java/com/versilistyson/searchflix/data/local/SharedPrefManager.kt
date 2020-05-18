@@ -1,6 +1,7 @@
 package com.versilistyson.searchflix.data.local
 
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatDelegate
 import com.versilistyson.searchflix.domain.entities.Language
 import com.versilistyson.searchflix.domain.entities.Region
 import com.versilistyson.searchflix.domain.entities.Theme
@@ -17,8 +18,6 @@ class SharedPrefManager
 
         private const val DEFAULT_LANGUAGE_AND_REGION = "en-US"
         private const val DEFAULT_THEME = 0
-
-
     }
 
     private val sharedPrefEditor by lazy {
@@ -41,12 +40,12 @@ class SharedPrefManager
     fun fetchLanguageAndRegion() =
         sharedPref.getString(SharedPrefKeys.LANGUAGE_AND_REGION.KEY, DEFAULT_LANGUAGE_AND_REGION)
 
-    fun setTheme(theme: Theme) =
+    fun setTheme(dayNightTheme: Int) =
         sharedPrefEditor
-            .putInt(SharedPrefKeys.DAY_NIGHT_THEME.KEY, theme.value)
+            .putInt(SharedPrefKeys.DAY_NIGHT_THEME.KEY, dayNightTheme)
             .apply()
 
     fun fetchTheme() =
-        sharedPref.getInt(SharedPrefKeys.DAY_NIGHT_THEME.KEY, DEFAULT_THEME)
+        sharedPref.getInt(SharedPrefKeys.DAY_NIGHT_THEME.KEY, AppCompatDelegate.MODE_NIGHT_NO)
 
 }

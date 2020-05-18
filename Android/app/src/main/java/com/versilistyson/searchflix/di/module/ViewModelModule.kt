@@ -2,6 +2,7 @@ package com.versilistyson.searchflix.di.module
 
 import androidx.lifecycle.ViewModel
 import com.versilistyson.searchflix.di.util.ViewModelKey
+import com.versilistyson.searchflix.presentation.ui.MainViewModel
 import com.versilistyson.searchflix.presentation.ui.dashboard.DashboardViewModel
 import com.versilistyson.searchflix.presentation.ui.details.MediaDetailsViewModel
 import com.versilistyson.searchflix.presentation.ui.favorites.FavoritesViewModel
@@ -46,4 +47,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SettingsViewModel::class)
     abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
 }
