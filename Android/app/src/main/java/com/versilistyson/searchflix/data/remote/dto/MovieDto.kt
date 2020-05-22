@@ -26,7 +26,7 @@ data class MovieDto(
     @Json(name = "video")
     val hasVideo: Boolean
 ) : Dto<Movie>() {
-
+    // comment
     override fun toEntity(): Movie =
         Movie(
             movieId = id,
